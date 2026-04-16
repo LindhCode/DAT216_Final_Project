@@ -3,7 +3,7 @@
 ## Skisser och tankar
 
 ### Alfreds skiss
-![alt text](image-4.png)
+![alt text](/skisser/image-4.png)
 
 #### Kritik från gruppen
 * Känns onödigt med att förväntas hitta allt i sidomenyn till vänster.
@@ -35,7 +35,7 @@
 * **Igenkänning framför erinring:** För att hjälpa Rune och Hjördis, använd ikoner tillsammans med texten i sidomenyn (t.ex. en ikon av ett äpple vid "Frukt") för att underlätta snabb identifiering (*recognition over recall*).
 
 ### Jolinas skiss
-![alt text](image-1.png)
+![alt text](/skisser/image-1.png)
 
 #### Kritik från gruppen
 * **Bra med "Mina Favoriter":** En funktion som underlättar för återkommande kunder, även om det kräver stöd från backend.
@@ -69,7 +69,7 @@
 * **Responsiv varukorg:** Fundera på om varukorgen alltid ska ta upp en tredjedel av skärmen eller om den ska gå att minimera för att ge mer plats åt sortimentet vid behov.
 
 ### Jacobs skiss
-![alt text](image-2.png)
+![alt text](/skisser/image-2.png)
 
 #### Kritik från gruppen
 * **Utökade cards för varor:** Bra med tydliga produktkort som innehåller både bild, text och beskrivning av varan.
@@ -103,7 +103,7 @@
 * **Status för inloggning:** Ändra "Logga in"-knappen till en profilbild eller användarnamn när man är inloggad för att bekräfta att "mina uppgifter" nu sparas, enligt kravspecifikationen.
 
 ### Axels skiss
-![alt text](image-3.png)
+![alt text](/skisser/image-3.png)
 
 #### Kritik från gruppen
 * **Liten text kan vara ett problem:** Särskilt under produktnamnen och i sidomenyn kan textstorleken bli en barriär för äldre användare som Rune och Hjördis.
