@@ -139,6 +139,14 @@
 * **Visa sparade uppgifter:** Eftersom systemet ska spara adress och betalsätt, lägg till en liten indikation vid profil-ikonen längst upp till höger som visar att användaren är inloggad (t.ex. "Hej Rune!").
 * **Optimera varukorgen:** Gör raderna i varukorgen något högre och knapparna (+ / -) större för att underlätta interaktion. Överväg att lägga till en tydlig "Töm varukorg"-ikon som inte riskerar att förväxlas med betalningsknappen.
 
-# Uppgifter
+# Generella anteckningar
 
-## Förstudie
+## Tankegångar kring design av prototyp
+- Stor text - Rune och Gjördis måste se all texrt
+- Hur gör vi med ikoner?
+- Thumbnails eller inte på sidonmenyn (kör vi som Axel tänkt)
+    - Fördelar
+        - Tydligt (a huge cucumber)
+    - Nackdelar
+        - Lång meny - långt att skrolla
+        - Hur går man fram och tillbaka
