@@ -152,6 +152,7 @@
         - Hur går man fram och tillbaka
 
 ## Gemensam designdisskussion
+![alt text](skisser/gemensam_design.png)
 - Stor text
 - Statisk varukorg till höger
 - Sidomeny med thumbnails för kategorier
