@@ -150,3 +150,9 @@
     - Nackdelar
         - Lång meny - långt att skrolla
         - Hur går man fram och tillbaka
+
+## Gemensam designdisskussion
+- Stor text
+- Statisk varukorg till höger
+- Sidomeny med thumbnails för kategorier
+- 
