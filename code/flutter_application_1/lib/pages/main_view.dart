@@ -76,7 +76,7 @@ class _MainViewState extends State<MainView> {
                     ),
                   ),
                 ),
-                CartSidebar(iMat: iMat), // Högerpanel
+                CartSidebar(), // Högerpanel
               ],
             ),
           ),
