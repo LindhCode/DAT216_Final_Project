@@ -26,16 +26,43 @@ class _HistoryPageState extends State<HistoryPage> {
       body: Column(
         children: [
           // Din Navbar integrerad högst upp
-          TopNavbar(
-            searchController: _searchController,
-            onHomePressed: () => Navigator.pushNamed(context, '/home'),
-            onShopPressed: () => Navigator.pushNamed(context, '/shop'),
-            onFavoritesPressed: () => Navigator.pushNamed(context, '/favorites'),
-            onHistoryPressed: () { /* Redan här */ },
-            onSearchChanged: (value) {
-              // Här kan du lägga till söklogik om du vill filtrera historik
-            },
-          ),
+    // Din Navbar integrerad högst upp i HistoryPage
+      TopNavbar(
+        searchController: _searchController,
+        
+        // Gå tillbaka och visa alla produkter
+        onHomePressed: () {
+          dataHandler.selectAllProducts();
+          Navigator.pushNamed(context, '/');
+        },
+        
+        // Gå tillbaka och visa shoppen (alla produkter)
+        onShopPressed: () {
+          dataHandler.selectAllProducts();
+          Navigator.pushNamed(context, '/');
+        },
+        
+        // Gå tillbaka och visa endast favoriter
+        onFavoritesPressed: () {
+          dataHandler.selectFavorites();
+          Navigator.pushNamed(context, '/');
+        },
+        
+        onHistoryPressed: () { 
+          /* Vi är redan här, så vi gör ingenting */ 
+        },
+        
+        // Sökning från historiksidan: filtrera och hoppa till startsidan för att se resultatet
+        onSearchChanged: (value) {
+          if (value.trim().isEmpty) {
+            dataHandler.selectAllProducts();
+          } else {
+            dataHandler.selectSelection(dataHandler.findProducts(value));
+          }
+          // Hoppa till startsidan så användaren ser sökresultatet i GridView:n
+          Navigator.pushNamed(context, '/');
+        },
+      ),
           
           Expanded(
             child: SingleChildScrollView(
