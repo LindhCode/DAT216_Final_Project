@@ -64,6 +64,7 @@ class ImatDataHandler extends ChangeNotifier {
     _selectProducts.addAll(selection);
     notifyListeners();
   }
+  
 
   // Returnerar alla produkter som hör till category.
   // Med denna och setSelection kan man sätta urvalet till en viss kategori.

@@ -14,8 +14,8 @@ class AppTheme {
   static const Color darkGreen = Color(0xFF3B5B28);    // Hover-effekter eller mörkare detaljer
   static const Color accentRed = Color(0xFFB54D3F);    // "Töm varukorgen" och favorit-hjärtan
   static const Color backgroundLight = Color(0xFFF5F5F5); // Ljusgrå bakgrund bakom korten
-  static const Color cardBackground = Colors.white;    // Vit bakgrund för produktkort
-  static const Color sidebarBackground = Color(0xFFE0E0E0); // Sidopanelens bakgrund
+  static const Color cardBackground = Color.fromARGB(255, 219, 212, 212);    // Vit bakgrund för produktkort
+  static const Color sidebarBackground = Color(0xFFF5F5F5); // Sidopanelens bakgrund
   static const Color textMain = Color(0xFF333333);     // Huvudtext (svart/mörkgrå)
   static const Color textSecondary = Color(0xFF666666); // Undertext (t.ex. vikt/klass)
   static const Color priceYellow = Color(0xFFFFEB3B);  // Bakgrund för prislappar
