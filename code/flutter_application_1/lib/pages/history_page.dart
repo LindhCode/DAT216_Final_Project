@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:imat_app/widgets/top_navbar.dart';
 import 'package:provider/provider.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
 import 'package:imat_app/model/imat/order.dart';
-import 'package:imat_app/app_theme.dart';
-import 'package:imat_app/widgets/top_navbar.dart';
+import 'package:imat_app/widgets/top_navbar.dart'; // Justera sökvägen om behövs
+ // För snyggare datumformatering
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -16,78 +17,59 @@ class _HistoryPageState extends State<HistoryPage> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // Vi lyssnar på ImatDataHandler för att få tillgång till order-listan
     final dataHandler = context.watch<ImatDataHandler>();
     final orders = dataHandler.orders;
 
     return Scaffold(
       body: Column(
         children: [
-          // Navbaren högst upp
+          // Din Navbar integrerad högst upp
           TopNavbar(
             searchController: _searchController,
-            // Gå tillbaka till startsidan
-            onHomePressed: () => Navigator.pushNamed(context, '/'),
-            onShopPressed: () => Navigator.pushNamed(context, '/'),
-            onFavoritesPressed: () {
-              dataHandler.selectFavorites();
-              Navigator.pushNamed(context, '/');
-            },
-            onHistoryPressed: () {}, // Vi är redan här
+            onHomePressed: () => Navigator.pushNamed(context, '/home'),
+            onShopPressed: () => Navigator.pushNamed(context, '/shop'),
+            onFavoritesPressed: () => Navigator.pushNamed(context, '/favorites'),
+            onHistoryPressed: () { /* Redan här */ },
             onSearchChanged: (value) {
-              if (value.isEmpty) {
-                dataHandler.selectAllProducts();
-              } else {
-                dataHandler.selectSelection(dataHandler.findProducts(value));
-              }
-              Navigator.pushNamed(context, '/');
+              // Här kan du lägga till söklogik om du vill filtrera historik
             },
           ),
           
-          // Innehållet under navbaren
           Expanded(
             child: SingleChildScrollView(
-              // Använder padding från ditt AppTheme för att undvika "hopp"
-              padding: const EdgeInsets.all(AppTheme.paddingLarge),
-              child: Center(
-                child: Container(
-                  constraints: const BoxConstraints(maxWidth: 800), // Håller listan centrerad och snygg
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Mina tidigare köp',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      
-                      if (orders.isEmpty)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 40),
-                          child: Center(child: Text('Här var det tomt! Du har inte gjort några beställningar än.')),
-                        )
-                      else
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: orders.length,
-                          itemBuilder: (context, index) {
-                            final order = orders[index];
-                            return _buildOrderCard(order);
-                          },
-                        ),
-                    ],
+              padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 40),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Mina tidigare köp',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 24),
+                  
+                  // Om listan är tom, visa ett meddelande
+                  if (orders.isEmpty)
+                    const Center(
+                      child: Text('Du har inte gjort några köp än.'),
+                    )
+                  else
+                    // Lista alla ordrar
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: orders.length,
+                      itemBuilder: (context, index) {
+                        final order = orders[index];
+                        return _buildOrderCard(order);
+                      },
+                    ),
+                ],
               ),
             ),
           ),
@@ -97,36 +79,83 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget _buildOrderCard(Order order) {
-    // Formaterar datum manuellt: YYYY-MM-DD
-    String dateStr = "${order.date.year}-${order.date.month.toString().padLeft(2, '0')}-${order.date.day.toString().padLeft(2, '0')}";
+    // Formatera datumet från din Order-modell
+    String formattedDate = "${order.date.year}-${order.date.month.toString().padLeft(2, '0')}-${order.date.day.toString().padLeft(2, '0')}";
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: ExpansionTile(
-        title: Text(
-          'Order #${order.orderNumber} - $dateStr',
-          style: const TextStyle(fontWeight: FontWeight.bold),
+        tilePadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Order #${order.orderNumber}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                Text(
+                  formattedDate,
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+              ],
+            ),
+            Text(
+              '${order.getTotal().toStringAsFixed(2)} kr',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Color(0xFF689451), // primaryGreen från ditt AppTheme
+              ),
+            ),
+          ],
         ),
-        subtitle: Text('Totalt: ${order.getTotal().toStringAsFixed(2)} kr'),
-        trailing: const Icon(Icons.keyboard_arrow_down, color: AppTheme.primaryGreen),
         children: [
+          // Här visas innehållet i ordern när man klickar på den
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               children: order.items.map((item) {
-                return ListTile(
-                  leading: const Icon(Icons.shopping_basket_outlined, size: 20),
-                  title: Text(item.product.name),
-                  trailing: Text('${item.amount.toInt()} ${item.product.unit}'),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('${item.amount.toInt()}x ${item.product.name}'),
+                      Text('${(item.product.price * item.amount).toStringAsFixed(2)} kr'),
+                    ],
+                  ),
                 );
               }).toList(),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: TextButton.icon(
+              onPressed: () {
+                // Här kan du lägga till logik för att "Köp igen"
+                // genom att loopa igenom order.items och köra dataHandler.shoppingCartAdd
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Lägg till hela ordern i varukorg'),
+            ),
+          )
         ],
       ),
     );
