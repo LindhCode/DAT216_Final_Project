@@ -5,6 +5,7 @@ import 'package:imat_app/widgets/product_card.dart';
 import 'package:imat_app/widgets/top_navbar.dart';
 import 'package:imat_app/widgets/category.dart';
 import 'package:imat_app/widgets/shoppingcart.dart';
+import 'package:imat_app/widgets/breadcrumbs.dart'; // Importera din nya widget
 import 'package:provider/provider.dart';
 
 class MainView extends StatefulWidget {
@@ -33,12 +34,29 @@ class _MainViewState extends State<MainView> {
         children: [
           TopNavbar(
             searchController: _searchController,
-            onHomePressed: () => iMat.selectAllProducts(),
-            onShopPressed: () => iMat.selectAllProducts(),
-            onFavoritesPressed: () => iMat.selectFavorites(),
+            onHomePressed: () {
+              iMat.setShowingFavorites(false);
+              iMat.setSelectedCategory("");
+              iMat.selectAllProducts();
+            },
+            onShopPressed: () {
+              iMat.setShowingFavorites(false);
+              iMat.setSelectedCategory("");
+              iMat.selectAllProducts();
+            },
+            onFavoritesPressed: () {
+              iMat.setShowingFavorites(true);
+              iMat.selectFavorites();
+            },
             onHistoryPressed: () {},
             onSearchChanged: (value) {
-              value.isEmpty ? iMat.selectAllProducts() : iMat.selectSelection(iMat.findProducts(value));
+              if (value.isEmpty) {
+                iMat.selectAllProducts();
+              } else {
+                iMat.setShowingFavorites(false);
+                iMat.setSelectedCategory("Sökresultat: $value");
+                iMat.selectSelection(iMat.findProducts(value));
+              }
             },
           ),
           Expanded(
@@ -52,31 +70,29 @@ class _MainViewState extends State<MainView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.all(AppTheme.paddingLarge),
-                          child: Text(
-                            "Grönsaker > Tyska gurkor",
-                            style: TextStyle(fontSize: 18, color: AppTheme.textSecondary),
-                          ),
-                        ),
+                        // HÄR HAR VI ERSATT DEN GAMLA TEXTEN MED DIN NYA BREADCRUMBS-WIDGET
+                        const Breadcrumbs(),
+
                         Expanded(
-                          child: GridView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingLarge),
-                            itemCount: products.length,
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: AppTheme.paddingMedium,
-                              mainAxisSpacing: AppTheme.paddingMedium,
-                              childAspectRatio: 0.65, 
-                            ),
-                            itemBuilder: (context, index) => ProductCard(products[index], iMat),
-                          ),
+                          child: products.isEmpty 
+                            ? const Center(child: Text("Inga produkter hittades"))
+                            : GridView.builder(
+                                padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingLarge),
+                                itemCount: products.length,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: AppTheme.paddingMedium,
+                                  mainAxisSpacing: AppTheme.paddingMedium,
+                                  childAspectRatio: 0.65, 
+                                ),
+                                itemBuilder: (context, index) => ProductCard(products[index], iMat),
+                              ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                CartSidebar(), // Högerpanel
+                const CartSidebar(), // Högerpanel
               ],
             ),
           ),

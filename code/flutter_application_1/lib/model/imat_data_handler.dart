@@ -99,6 +99,26 @@ class ImatDataHandler extends ChangeNotifier {
   //
   // Manage favorites
   //
+  String _selectedCategory = "";
+  bool _isShowingFavorites = false;
+
+// Getters för att läsa värdena
+  String get selectedCategory => _selectedCategory;
+  bool get isShowingFavorites => _isShowingFavorites;
+
+// Metod för att ändra kategori
+void setSelectedCategory(String category) {
+  _selectedCategory = category;
+  _isShowingFavorites = false; // Om vi väljer en kategori slutar vi visa favoriter
+  notifyListeners();
+}
+
+// Metod för att växla favoritvy
+void setShowingFavorites(bool value) {
+  _isShowingFavorites = value;
+  if (value) _selectedCategory = ""; // Om vi visar favoriter nollställer vi kategori
+  notifyListeners();
+}
 
   // Returnerar en lista med alla favoritmarkerade produkter.
   List<Product> get favorites => _favorites.values.toList();
