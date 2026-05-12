@@ -2,102 +2,159 @@ import 'package:flutter/material.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
 import 'package:provider/provider.dart';
 
-class AccountView extends StatelessWidget {
+class AccountView extends StatefulWidget {
   const AccountView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final iMat = context.watch<ImatDataHandler>();
+  State<AccountView> createState() => _AccountViewState();
+}
+
+class _AccountViewState extends State<AccountView> {
+  bool isEditing = false;
+
+  late TextEditingController firstName;
+  late TextEditingController lastName;
+  late TextEditingController email;
+  late TextEditingController phone;
+  late TextEditingController mobile;
+  late TextEditingController address;
+  late TextEditingController postCode;
+  late TextEditingController city;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final iMat = context.read<ImatDataHandler>();
     final customer = iMat.getCustomer();
 
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: const Text("Mitt konto"),
-        backgroundColor: Colors.grey[900],
-        foregroundColor: Colors.white,
-      ),
-      body: Center(
-        child: Container(
-          width: 600,
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-              )
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                "Personuppgifter",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
+    firstName = TextEditingController(text: customer.firstName);
+    lastName = TextEditingController(text: customer.lastName);
+    email = TextEditingController(text: customer.email);
+    phone = TextEditingController(text: customer.phoneNumber);
+    mobile = TextEditingController(text: customer.mobilePhoneNumber);
+    address = TextEditingController(text: customer.address);
+    postCode = TextEditingController(text: customer.postCode);
+    city = TextEditingController(text: customer.postAddress);
+  }
 
-              const SizedBox(height: 20),
+  void save() {
+    final iMat = context.read<ImatDataHandler>();
+    final customer = iMat.getCustomer();
 
-              infoRow("Förnamn", customer.firstName),
-              infoRow("Efternamn", customer.lastName),
-              infoRow("Email", customer.email),
-              infoRow("Telefon", customer.phoneNumber),
-              infoRow("Mobil", customer.mobilePhoneNumber),
+    customer.firstName = firstName.text;
+    customer.lastName = lastName.text;
+    customer.email = email.text;
+    customer.phoneNumber = phone.text;
+    customer.mobilePhoneNumber = mobile.text;
+    customer.address = address.text;
+    customer.postCode = postCode.text;
+    customer.postAddress = city.text;
 
-              const SizedBox(height: 20),
-              const Divider(),
+    iMat.setCustomer(customer);
 
-              const SizedBox(height: 20),
+    setState(() => isEditing = false);
 
-              const Text(
-                "Adress",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Uppgifter sparade")),
+    );
+  }
 
-              const SizedBox(height: 10),
-
-              Text(customer.address),
-              Text("${customer.postCode} ${customer.postAddress}"),
-
-              const SizedBox(height: 30),
-
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[900],
-                  ),
-                  onPressed: () {
-                    // TODO: edit mode senare
-                  },
-                  child: const Text("Redigera"),
-                ),
-              )
-            ],
-          ),
+  Widget field(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        controller: controller,
+        enabled: isEditing,
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
         ),
       ),
     );
   }
 
-  Widget infoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              "$label:",
-              style: const TextStyle(fontWeight: FontWeight.w600),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+
+      appBar: AppBar(
+        title: const Text("Mitt konto"),
+        backgroundColor: Colors.grey[900],
+        foregroundColor: Colors.white,
+      ),
+
+      // 🚀 SCROLL FIX (VIKTIGT)
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            width: 600,
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: const [
+                BoxShadow(color: Colors.black12, blurRadius: 10),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Personuppgifter",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+
+                const SizedBox(height: 20),
+
+                field("Förnamn", firstName),
+                field("Efternamn", lastName),
+                field("Email", email),
+                field("Telefon", phone),
+                field("Mobil", mobile),
+
+                const SizedBox(height: 20),
+
+                const Divider(),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  "Adress",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+
+                const SizedBox(height: 10),
+
+                field("Adress", address),
+                field("Postnummer", postCode),
+                field("Stad", city),
+
+                const SizedBox(height: 30),
+
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[900],
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () {
+                      if (isEditing) {
+                        save();
+                      } else {
+                        setState(() => isEditing = true);
+                      }
+                    },
+                    child: Text(isEditing ? "Spara" : "Redigera"),
+                  ),
+                ),
+              ],
             ),
           ),
-          Expanded(child: Text(value.isEmpty ? "-" : value)),
-        ],
+        ),
       ),
     );
   }
