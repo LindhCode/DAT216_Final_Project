@@ -4,7 +4,8 @@ import 'package:imat_app/model/imat_data_handler.dart';
 import 'package:imat_app/widgets/product_card.dart';
 import 'package:imat_app/widgets/top_navbar.dart';
 import 'package:imat_app/pages/account_view.dart';
-import 'package:imat_app/pages/history_page.dart'; // Din snygga historiksida
+import 'package:imat_app/pages/history_page.dart';
+import 'package:imat_app/pages/checkout/checkout_view.dart'; // Lagt till
 import 'package:provider/provider.dart';
 
 class MainView extends StatefulWidget {
@@ -24,7 +25,6 @@ class _MainViewState extends State<MainView> {
     super.dispose();
   }
 
-  // Hjälpmetod för att nollställa sökning och visa allt
   void _resetToHome(ImatDataHandler iMat) {
     setState(() {
       selectedIndex = 0;
@@ -39,53 +39,36 @@ class _MainViewState extends State<MainView> {
     final products = iMat.selectProducts;
     final spacing = AppTheme.paddingSmall;
 
-    // Här bestämmer vi vad som ska visas i mitten av skärmen
     Widget body;
     switch (selectedIndex) {
-      case 0: // SHOP / HANDLA
-        body = products.isEmpty 
-          ? const Center(child: Text("Inga produkter hittades."))
-          : GridView.builder(
-              padding: const EdgeInsets.all(24),
-              itemCount: products.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: spacing,
-                mainAxisSpacing: spacing,
-                childAspectRatio: 4 / 3,
-              ),
-              itemBuilder: (context, index) {
-                return ProductCard(products[index], iMat);
-              },
-            );
+      case 0:
+      case 1:
+        body = GridView.builder(
+          padding: EdgeInsets.all(spacing),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            childAspectRatio: 0.75,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            // EXAKT som i din originalkod
+            return ProductCard(product: products[index]);
+          },
+        );
         break;
 
-      case 1: // FAVORITER
-        // Vi återanvänder samma GridView men förutsätter att iMat.selectFavorites() har körts
-        body = products.isEmpty 
-          ? const Center(child: Text("Du har inga favoriter än."))
-          : GridView.builder(
-              padding: const EdgeInsets.all(24),
-              itemCount: products.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: spacing,
-                mainAxisSpacing: spacing,
-                childAspectRatio: 4 / 3,
-              ),
-              itemBuilder: (context, index) {
-                return ProductCard(products[index], iMat);
-              },
-            );
+      case 2:
+        body = const HistoryPage();
         break;
 
-      case 2: // HISTORIK
-        // VIKTIGT: Här anropas din riktiga HistoryPage-klass
-        body = const HistoryPage(); 
-        break;
-
-      case 3: // MITT KONTO
+      case 3:
         body = const AccountView();
+        break;
+
+      case 4: // KASSAN
+        body = const CheckoutView();
         break;
 
       default:
@@ -93,38 +76,32 @@ class _MainViewState extends State<MainView> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[50], // Ljus bakgrund för att lyfta fram korten
+      backgroundColor: Colors.grey[50],
+      // Knappen som tar dig till kassan
+      floatingActionButton: (selectedIndex != 4 && iMat.getShoppingCart().items.isNotEmpty)
+          ? FloatingActionButton.extended(
+              onPressed: () => setState(() => selectedIndex = 4),
+              backgroundColor: const Color(0xFF689451),
+              icon: const Icon(Icons.shopping_cart_checkout, color: Colors.white),
+              label: const Text("TILL KASSAN", style: TextStyle(color: Colors.white)),
+            )
+          : null,
       body: Column(
         children: [
-          // Din Navbar som alltid ligger kvar högst upp
           TopNavbar(
             searchController: _searchController,
             selectedIndex: selectedIndex,
-
             onHomePressed: () => _resetToHome(iMat),
-            
             onShopPressed: () => _resetToHome(iMat),
-
             onFavoritesPressed: () {
               setState(() => selectedIndex = 1);
               _searchController.clear();
               iMat.selectFavorites();
             },
-
-            onHistoryPressed: () {
-              setState(() => selectedIndex = 2);
-            },
-
-            onAccountPressed: () {
-              setState(() => selectedIndex = 3);
-            },
-
+            onHistoryPressed: () => setState(() => selectedIndex = 2),
+            onAccountPressed: () => setState(() => selectedIndex = 3),
             onSearchChanged: (value) {
-              // Hoppa automatiskt till "Handla"-vyn när användaren söker
-              if (selectedIndex != 0) {
-                setState(() => selectedIndex = 0);
-              }
-              
+              if (selectedIndex != 0) setState(() => selectedIndex = 0);
               if (value.trim().isEmpty) {
                 iMat.selectAllProducts();
               } else {
@@ -132,11 +109,7 @@ class _MainViewState extends State<MainView> {
               }
             },
           ),
-
-          // Här renderas den valda vyn
-          Expanded(
-            child: body,
-          ),
+          Expanded(child: body),
         ],
       ),
     );
