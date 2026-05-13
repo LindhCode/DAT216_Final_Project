@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:imat_app/app_theme.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
-import 'package:imat_app/widgets/product_card.dart';
 import 'package:imat_app/widgets/top_navbar.dart';
+import 'package:imat_app/widgets/shoppingcart.dart';
 import 'package:imat_app/pages/account_view.dart';
 import 'package:imat_app/pages/history_page.dart';
-import 'package:imat_app/pages/checkout/checkout_view.dart'; // Lagt till
+import 'package:imat_app/pages/checkout/checkout_view.dart';
+import 'package:imat_app/widgets/product_card.dart';
 import 'package:provider/provider.dart';
 
 class MainView extends StatefulWidget {
@@ -17,13 +17,7 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   final TextEditingController _searchController = TextEditingController();
-  int selectedIndex = 0;
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
+  int selectedIndex = 0; // 0=Hem, 1=Favoriter, 2=Historik, 3=Konto, 4=Kassa
 
   void _resetToHome(ImatDataHandler iMat) {
     setState(() {
@@ -36,56 +30,56 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     final iMat = context.watch<ImatDataHandler>();
-    final products = iMat.selectProducts;
-    final spacing = AppTheme.paddingSmall;
-
+    
     Widget body;
+    
     switch (selectedIndex) {
-      case 0:
-      case 1:
-        body = GridView.builder(
-          padding: EdgeInsets.all(spacing),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          itemCount: products.length,
-          itemBuilder: (context, index) {
-            // EXAKT som i din originalkod
-            return ProductCard(product: products[index]);
-          },
-        );
+      case 1: // FAVORITER
+        // Vi använder iMat.selectProducts eftersom onFavoritesPressed kör iMat.selectFavorites()
+        final products = iMat.selectProducts; 
+        
+        body = products.isEmpty 
+          ? const Center(child: Text("Inga favoriter hittades.", style: TextStyle(fontSize: 18)))
+          : GridView.builder(
+              padding: const EdgeInsets.all(24),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+              ),
+              itemCount: products.length,
+              itemBuilder: (context, index) => ProductCard(product: products[index]),
+            );
         break;
-
+        
       case 2:
         body = const HistoryPage();
         break;
-
+        
       case 3:
         body = const AccountView();
         break;
-
-      case 4: // KASSAN
+        
+      case 4:
         body = const CheckoutView();
         break;
-
-      default:
-        body = const Center(child: Text("Sidan kunde inte hittas."));
+        
+      default: // HEM (SelectedIndex 0)
+        body = GridView.builder(
+          padding: const EdgeInsets.all(24),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            childAspectRatio: 0.75,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
+          ),
+          itemCount: iMat.selectProducts.length,
+          itemBuilder: (context, index) => ProductCard(product: iMat.selectProducts[index]),
+        );
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      // Knappen som tar dig till kassan
-      floatingActionButton: (selectedIndex != 4 && iMat.getShoppingCart().items.isNotEmpty)
-          ? FloatingActionButton.extended(
-              onPressed: () => setState(() => selectedIndex = 4),
-              backgroundColor: const Color(0xFF689451),
-              icon: const Icon(Icons.shopping_cart_checkout, color: Colors.white),
-              label: const Text("TILL KASSAN", style: TextStyle(color: Colors.white)),
-            )
-          : null,
       body: Column(
         children: [
           TopNavbar(
@@ -96,7 +90,7 @@ class _MainViewState extends State<MainView> {
             onFavoritesPressed: () {
               setState(() => selectedIndex = 1);
               _searchController.clear();
-              iMat.selectFavorites();
+              iMat.selectFavorites(); // Uppdaterar listan i datahandlern till favoriter
             },
             onHistoryPressed: () => setState(() => selectedIndex = 2),
             onAccountPressed: () => setState(() => selectedIndex = 3),
@@ -109,7 +103,17 @@ class _MainViewState extends State<MainView> {
               }
             },
           ),
-          Expanded(child: body),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(child: body),
+                if (selectedIndex != 4) // Visa bara varukorgen om vi inte är i kassan
+                  CartSidebar(
+                    onCheckout: () => setState(() => selectedIndex = 4),
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
     );
