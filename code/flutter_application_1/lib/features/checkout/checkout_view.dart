@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:imat_app/core/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
 import 'checkout_theme.dart';
-import 'checkout_widgets.dart';
 import 'checkout_step_indicator.dart' as step_indicator;
 
 import 'step1_granskning.dart';
@@ -27,9 +27,9 @@ class _CheckoutViewState extends State<CheckoutView> {
   final _postCodeCtrl = TextEditingController();
   final _cityCtrl = TextEditingController();
   final _notesCtrl = TextEditingController();
-  
+
   // Betalningsinställningar
-  int _paymentMethod = 1; 
+  int _paymentMethod = 1;
   final _cardFirstCtrl = TextEditingController();
   final _cardLastCtrl = TextEditingController();
   final _cardNumberCtrl = TextEditingController();
@@ -65,10 +65,8 @@ class _CheckoutViewState extends State<CheckoutView> {
         step_indicator.CheckoutStepIndicator(currentStep: _currentStep),
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Center(
-              child: _buildStepContent(iMat),
-            ),
+            padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingInset),
+            child: Center(child: _buildStepContent(iMat)),
           ),
         ),
       ],
@@ -102,29 +100,37 @@ class _CheckoutViewState extends State<CheckoutView> {
         );
       case 3:
         final cart = iMat.getShoppingCart();
-        final totalSum = cart.items.fold<double>(0.0, (sum, item) => sum + item.total);
+        final totalSum = cart.items.fold<double>(
+          0.0,
+          (sum, item) => sum + item.total,
+        );
 
         return Step4Slutfor(
           iMat: iMat,
           cartTotal: totalSum,
           deliveryCost: 49.0,
           deliveryDate: 'Idag, 14:00 - 16:00',
-          paymentLabel: _paymentMethod == 1 ? 'Bankkort' : (_paymentMethod == 0 ? 'Klarna' : 'Swish'),
+          paymentLabel:
+              _paymentMethod == 1
+                  ? 'Bankkort'
+                  : (_paymentMethod == 0 ? 'Klarna' : 'Swish'),
           onPlaceOrder: () {
             // Här utförs själva köpet
             // iMat.placeOrder(); // Antag att denna metod rensar korgen och skapar order
-            
+
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Tack för din beställning!'),
                 backgroundColor: CheckoutTheme.green,
               ),
             );
-            
+
             // Starta om appen på "Historik"-sidan (index 2 i MainView)
-            // Detta kräver att du har tillgång till setState i MainView, 
+            // Detta kräver att du har tillgång till setState i MainView,
             // men för enkelhetens skull kan vi navigera användaren till början.
-            Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/', (route) => false);
           },
         );
       default:

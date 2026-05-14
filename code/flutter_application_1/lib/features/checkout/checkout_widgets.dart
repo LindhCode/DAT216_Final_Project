@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imat_app/core/theme/app_theme.dart';
 import 'checkout_theme.dart';
 
 // ── Rounded card wrapper ──
@@ -12,11 +13,13 @@ class CheckoutCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: margin ?? const EdgeInsets.only(bottom: CheckoutTheme.spaceMediumSmall),
-      padding: const EdgeInsets.all(CheckoutTheme.spaceMedium),
+      margin:
+          margin ??
+          const EdgeInsets.only(bottom: AppTheme.paddingMediumSmall),
+      padding: const EdgeInsets.all(AppTheme.paddingMedium),
       decoration: BoxDecoration(
         color: CheckoutTheme.card,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         border: Border.all(color: CheckoutTheme.border),
       ),
       child: child,
@@ -42,37 +45,42 @@ class NavButton extends StatelessWidget {
     // Använder CheckoutTheme konstanter
     final Color bg = outlined ? Colors.white : CheckoutTheme.green;
     final Color fg = outlined ? CheckoutTheme.textDark : Colors.white;
-    
+
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: bg,
         foregroundColor: fg,
         padding: const EdgeInsets.symmetric(
-          horizontal: CheckoutTheme.spaceLarge,
-          vertical: 14, // Matcha bild
+          horizontal: AppTheme.paddingLarge,
+          vertical: AppTheme.paddingBlock,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18), // Matcha bild (runda)
-          side: outlined
-              ? const BorderSide(color: CheckoutTheme.border)
-              : BorderSide.none,
+          borderRadius: BorderRadius.circular(AppTheme.radiusControl),
+          side:
+              outlined
+                  ? const BorderSide(color: CheckoutTheme.border)
+                  : BorderSide.none,
         ),
         elevation: outlined ? 0 : 1,
       ),
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        if (outlined) ...[
-          const Icon(Icons.arrow_back, size: 15),
-          const SizedBox(width: CheckoutTheme.spaceSmall),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (outlined) ...[
+            const Icon(Icons.arrow_back, size: 15),
+            const SizedBox(width: AppTheme.paddingSmall),
+          ],
+          Text(
+            label,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+          if (!outlined) ...[
+            const SizedBox(width: AppTheme.paddingSmall),
+            const Icon(Icons.arrow_forward, size: 15),
+          ],
         ],
-        Text(label,
-            style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w600)),
-        if (!outlined) ...[
-          const SizedBox(width: CheckoutTheme.spaceSmall),
-          const Icon(Icons.arrow_forward, size: 15),
-        ],
-      ]),
+      ),
     );
   }
 }
@@ -84,8 +92,10 @@ class SummaryRow extends StatelessWidget {
   final bool bold;
   final bool grey; // Grå text-stöd förort/adress
 
-  const SummaryRow(this.label, this.value, {
-    super.key, 
+  const SummaryRow(
+    this.label,
+    this.value, {
+    super.key,
     this.bold = false,
     this.grey = false,
   });
@@ -98,13 +108,10 @@ class SummaryRow extends StatelessWidget {
       color: grey ? CheckoutTheme.textMuted : CheckoutTheme.textDark,
     );
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: CheckoutTheme.spaceTiny),
+      padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingTiny),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: style),
-          Text(value, style: style),
-        ],
+        children: [Text(label, style: style), Text(value, style: style)],
       ),
     );
   }
@@ -117,11 +124,15 @@ class FieldLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: CheckoutTheme.spaceTiny, top: CheckoutTheme.spaceTiny),
-        child: Text(text,
-            style: const TextStyle(
-                fontSize: 13, color: CheckoutTheme.textMuted)),
-      );
+    padding: const EdgeInsets.only(
+      bottom: AppTheme.paddingTiny,
+      top: AppTheme.paddingTiny,
+    ),
+    child: Text(
+      text,
+      style: const TextStyle(fontSize: 13, color: CheckoutTheme.textMuted),
+    ),
+  );
 }
 
 // ── Styled text field ──
@@ -147,23 +158,24 @@ class CheckoutTextField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: const TextStyle(
-            color: CheckoutTheme.textMuted, fontSize: 13),
+          color: CheckoutTheme.textMuted,
+          fontSize: 13,
+        ),
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 10,
+          horizontal: AppTheme.paddingMediumSmall,
+          vertical: AppTheme.paddingCompact,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
           borderSide: const BorderSide(color: CheckoutTheme.border),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
           borderSide: const BorderSide(color: CheckoutTheme.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(
-              color: CheckoutTheme.green, width: 1.5),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+          borderSide: const BorderSide(color: CheckoutTheme.green, width: 1.5),
         ),
         filled: true,
         fillColor: Colors.white,

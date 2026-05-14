@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:imat_app/app_theme.dart';
+import 'package:imat_app/core/theme/app_theme.dart';
+import 'package:imat_app/features/history/history_page.dart';
+import 'package:imat_app/features/home/main_view.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
-import 'package:imat_app/pages/main_view.dart';
-import 'package:imat_app/pages/main_view.dart';     // Kontrollera sökstigen
-import 'package:imat_app/pages/history_page.dart';  // Kontrollera sökstigen
 import 'package:provider/provider.dart';
 
 void main() {
@@ -22,10 +21,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'iMat',
-      debugShowCheckedModeBanner: false, // Valfritt: tar bort debug-flaggan i hörnet
-      
+      debugShowCheckedModeBanner:
+          false, // Valfritt: tar bort debug-flaggan i hörnet
       // Vi använder ditt färdiga tema från AppTheme
-      theme: AppTheme.lightTheme, 
+      theme: AppTheme.lightTheme,
 
       // Vi tar bort 'home' och använder 'initialRoute' + 'routes' istället
       initialRoute: '/',

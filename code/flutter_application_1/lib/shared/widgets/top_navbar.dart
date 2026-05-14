@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:imat_app/app_theme.dart';
+import 'package:imat_app/core/theme/app_theme.dart';
 
 class TopNavbar extends StatefulWidget {
   final TextEditingController searchController;
@@ -48,28 +48,22 @@ class _TopNavbarState extends State<TopNavbar> {
         onEnter: (_) => setState(() => hoveredIndex = index),
         onExit: (_) => setState(() => hoveredIndex = -1),
         child: InkWell(
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(AppTheme.radiusRound),
           onTap: onTap,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
             padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
+              horizontal: AppTheme.paddingMedium,
+              vertical: AppTheme.paddingSmall,
             ),
             decoration: BoxDecoration(
-              color: isHovered
-                  ? AppTheme.darkGreen
-                  : AppTheme.primaryGreen,
-              borderRadius: BorderRadius.circular(25),
+              color: isHovered ? AppTheme.darkGreen : AppTheme.primaryGreen,
+              borderRadius: BorderRadius.circular(AppTheme.radiusRound),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: 22,
-                ),
-                SizedBox(width: 6),
+                const Icon(Icons.person, color: Colors.white, size: 22),
+                SizedBox(width: AppTheme.paddingXSmall),
                 Text(
                   "Mitt konto",
                   style: TextStyle(
@@ -90,35 +84,27 @@ class _TopNavbarState extends State<TopNavbar> {
       onEnter: (_) => setState(() => hoveredIndex = index),
       onExit: (_) => setState(() => hoveredIndex = -1),
       child: InkWell(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 8,
+            horizontal: AppTheme.paddingCompact,
+            vertical: AppTheme.paddingSmall,
           ),
           decoration: BoxDecoration(
-            color: isHovered
-                ? Colors.white10
-                : Colors.transparent,
-            border: isSelected
-                ? const Border(
-                    bottom: BorderSide(
-                      color: Colors.white,
-                      width: 2,
-                    ),
-                  )
-                : null,
+            color: isHovered ? Colors.white10 : Colors.transparent,
+            border:
+                isSelected
+                    ? const Border(
+                      bottom: BorderSide(color: Colors.white, width: 2),
+                    )
+                    : null,
           ),
           child: Row(
             children: [
-              Icon(
-                icon,
-                color: Colors.white,
-                size: 24,
-              ),
-              const SizedBox(width: 6),
+              Icon(icon, color: Colors.white, size: 24),
+              const SizedBox(width: AppTheme.paddingXSmall),
               Text(
                 label,
                 style: const TextStyle(
@@ -139,19 +125,16 @@ class _TopNavbarState extends State<TopNavbar> {
     return Container(
       height: 65,
       color: Colors.grey[900],
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingMedium),
       child: Row(
         children: [
           // 🏷️ LOGGA
           InkWell(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
             onTap: widget.onHomePressed,
             child: Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Image.asset(
-                'assets/images/imat_logo.png',
-                height: 55,
-              ),
+              padding: const EdgeInsets.only(right: AppTheme.paddingMedium),
+              child: Image.asset('assets/images/imat_logo.png', height: 55),
             ),
           ),
 
@@ -163,7 +146,7 @@ class _TopNavbarState extends State<TopNavbar> {
             onTap: widget.onShopPressed,
           ),
 
-          const SizedBox(width: 16),
+          const SizedBox(width: AppTheme.paddingMedium),
 
           // ❤️ FAVORITER
           navItem(
@@ -173,7 +156,7 @@ class _TopNavbarState extends State<TopNavbar> {
             onTap: widget.onFavoritesPressed,
           ),
 
-          const SizedBox(width: 16),
+          const SizedBox(width: AppTheme.paddingMedium),
 
           // 🔍 SÖKRUTA
           Expanded(
@@ -190,10 +173,10 @@ class _TopNavbarState extends State<TopNavbar> {
                     fillColor: Colors.white,
                     suffixIcon: const Icon(Icons.search),
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 20,
+                      horizontal: AppTheme.paddingInset,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusRound),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -202,7 +185,7 @@ class _TopNavbarState extends State<TopNavbar> {
             ),
           ),
 
-          const SizedBox(width: 16),
+          const SizedBox(width: AppTheme.paddingMedium),
 
           // 📜 HISTORIK
           navItem(
@@ -212,7 +195,7 @@ class _TopNavbarState extends State<TopNavbar> {
             onTap: widget.onHistoryPressed,
           ),
 
-          const SizedBox(width: 16),
+          const SizedBox(width: AppTheme.paddingMedium),
 
           // 👤 MITT KONTO
           navItem(

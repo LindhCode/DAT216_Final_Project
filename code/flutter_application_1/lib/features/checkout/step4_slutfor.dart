@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imat_app/core/theme/app_theme.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
 import 'checkout_theme.dart';
 import 'checkout_widgets.dart';
@@ -29,7 +30,8 @@ class Step4Slutfor extends StatelessWidget {
     final total = cartTotal + deliveryCost;
 
     // Prisformatering till SEK (t.ex. 1060,39 kr)
-    String format(double val) => '${val.toStringAsFixed(2).replaceAll('.', ',')} kr';
+    String format(double val) =>
+        '${val.toStringAsFixed(2).replaceAll('.', ',')} kr';
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 600),
@@ -40,28 +42,26 @@ class Step4Slutfor extends StatelessWidget {
             child: Text(
               '4. Slutför',
               style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: CheckoutTheme.textDark),
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: CheckoutTheme.textDark,
+              ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppTheme.paddingLarge),
 
           // ── Varukorg CARD (matcha image_3.png) ──
           CheckoutCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Varukorg',
-                    style: TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 10),
-                SummaryRow('Antal varor', '${cart.items.length}'),
-                SummaryRow(
-                  'Pris',
-                  format(cartTotal),
-                  bold: true,
+                const Text(
+                  'Varukorg',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(height: AppTheme.paddingCompact),
+                SummaryRow('Antal varor', '${cart.items.length}'),
+                SummaryRow('Pris', format(cartTotal), bold: true),
               ],
             ),
           ),
@@ -71,19 +71,20 @@ class Step4Slutfor extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Leverans',
-                    style: TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 10),
+                const Text(
+                  'Leverans',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: AppTheme.paddingCompact),
                 SummaryRow('Datum', deliveryDate),
-                SummaryRow('Ort', customer.postAddress, grey: true), // Grå matcha bild
+                SummaryRow(
+                  'Ort',
+                  customer.postAddress,
+                  grey: true,
+                ), // Grå matcha bild
                 SummaryRow('Postkod', customer.postCode, grey: true),
                 SummaryRow('Adress', customer.address, grey: true),
-                SummaryRow(
-                  'Pris',
-                  format(deliveryCost),
-                  bold: true,
-                ),
+                SummaryRow('Pris', format(deliveryCost), bold: true),
               ],
             ),
           ),
@@ -93,21 +94,18 @@ class Step4Slutfor extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Betalning',
-                    style: TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 10),
-                SummaryRow('Metod', paymentLabel),
-                SummaryRow(
-                  'Att betala',
-                  format(total),
-                  bold: true,
+                const Text(
+                  'Betalning',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(height: AppTheme.paddingCompact),
+                SummaryRow('Metod', paymentLabel),
+                SummaryRow('Att betala', format(total), bold: true),
               ],
             ),
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: AppTheme.paddingMediumSmall),
 
           // ── Big green CTA Button (matcha image_3.png) ──
           SizedBox(
@@ -117,17 +115,19 @@ class Step4Slutfor extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: CheckoutTheme.green,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingMedium),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                ),
                 elevation: 1,
               ),
-              child: const Text('Slutför beställning', 
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
+              child: const Text(
+                'Slutför beställning',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: AppTheme.paddingHuge),
         ],
       ),
     );

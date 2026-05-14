@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imat_app/core/theme/app_theme.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -55,14 +56,14 @@ class _AccountViewState extends State<AccountView> {
 
     setState(() => isEditing = false);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Uppgifter sparade")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Uppgifter sparade")));
   }
 
   Widget field(String label, TextEditingController controller) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingSmall),
       child: TextField(
         controller: controller,
         enabled: isEditing,
@@ -90,11 +91,11 @@ class _AccountViewState extends State<AccountView> {
         child: Center(
           child: Container(
             width: 600,
-            margin: const EdgeInsets.symmetric(vertical: 20),
-            padding: const EdgeInsets.all(24),
+            margin: const EdgeInsets.symmetric(vertical: AppTheme.paddingInset),
+            padding: const EdgeInsets.all(AppTheme.paddingLarge),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
               boxShadow: const [
                 BoxShadow(color: Colors.black12, blurRadius: 10),
               ],
@@ -107,7 +108,7 @@ class _AccountViewState extends State<AccountView> {
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: AppTheme.paddingInset),
 
                 field("Förnamn", firstName),
                 field("Efternamn", lastName),
@@ -115,24 +116,24 @@ class _AccountViewState extends State<AccountView> {
                 field("Telefon", phone),
                 field("Mobil", mobile),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: AppTheme.paddingInset),
 
                 const Divider(),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: AppTheme.paddingInset),
 
                 const Text(
                   "Adress",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: AppTheme.paddingCompact),
 
                 field("Adress", address),
                 field("Postnummer", postCode),
                 field("Stad", city),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: AppTheme.paddingSection),
 
                 Align(
                   alignment: Alignment.centerRight,
