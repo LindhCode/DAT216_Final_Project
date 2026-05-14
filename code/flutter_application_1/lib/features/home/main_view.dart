@@ -86,7 +86,11 @@ class _MainViewState extends State<MainView> {
       case 3:
         return const AccountView();
       case 4:
-        return const CheckoutView();
+        return CheckoutView(
+          onNavigateToHistory: (index) {
+            setState(() => selectedIndex = index);
+          },
+        );
       default:
         return GridView.builder(
           padding: const EdgeInsets.all(AppTheme.paddingLarge),

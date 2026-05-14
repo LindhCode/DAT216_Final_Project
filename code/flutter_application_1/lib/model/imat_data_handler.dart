@@ -337,20 +337,33 @@ void setShowingFavorites(bool value) {
     notifyListeners();
   }
 
-  void placeOrder() async {
-    await InternetHandler.placeOrder();
-    _shoppingCart.clear();
-    notifyListeners();
+void placeOrder() async {
+    try {
+      // 1. SYNKRONISERA: Skicka din lokala korg till servern först!
+      // Utan detta tror servern att korgen är tom när placeOrder körs.
+      await InternetHandler.setShoppingCart(_shoppingCart);
 
-    // Reload orders
-    var response = await InternetHandler.getOrders();
+      // 2. SKAPA ORDER: Nu vet servern vad som ska köpas.
+      await InternetHandler.placeOrder();
 
-    //print('Orders $response');
-    var jsonData = jsonDecode(response) as List;
+      // 3. RENSA LOKALT: Töm listan med items inuti korg-objektet.
+      _shoppingCart.items.clear();
+      
+      // 4. RENSA SERVER: Berätta för servern att korgen nu är tom.
+      await InternetHandler.setShoppingCart(_shoppingCart);
 
-    _orders.clear();
-    _orders.addAll(jsonData.map((item) => Order.fromJson(item)).toList());
-    notifyListeners();
+      // 5. UPPDATERA HISTORIK: Hämta de nya ordrarna.
+      var response = await InternetHandler.getOrders();
+      var jsonData = jsonDecode(response) as List;
+
+      _orders.clear();
+      _orders.addAll(jsonData.map((item) => Order.fromJson(item)).toList());
+      
+      // 6. MEDDELA UI: Nu ritas historiken om och korgen blir tom i vyn.
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Kunde inte genomföra order: $e");
+    }
   }
 
   void reset() async {

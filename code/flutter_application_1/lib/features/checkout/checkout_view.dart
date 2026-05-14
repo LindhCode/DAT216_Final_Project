@@ -11,7 +11,9 @@ import 'step3_betalning.dart';
 import 'step4_slutfor.dart';
 
 class CheckoutView extends StatefulWidget {
-  const CheckoutView({super.key});
+  final Function(int) onNavigateToHistory;
+
+  const CheckoutView({super.key, required this.onNavigateToHistory});
 
   @override
   State<CheckoutView> createState() => _CheckoutViewState();
@@ -29,7 +31,7 @@ class _CheckoutViewState extends State<CheckoutView> {
   final _notesCtrl = TextEditingController();
 
   // Betalningsinställningar
-  int _paymentMethod = 1;
+  int _paymentMethod = 1; // 0=Klarna, 1=Kort, 2=Swish
   final _cardFirstCtrl = TextEditingController();
   final _cardLastCtrl = TextEditingController();
   final _cardNumberCtrl = TextEditingController();
@@ -37,17 +39,19 @@ class _CheckoutViewState extends State<CheckoutView> {
   final _cvcCtrl = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    // Förifyll data från kunden om den finns
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final customer = context.read<ImatDataHandler>().getCustomer();
-      _firstNameCtrl.text = customer.firstName;
-      _lastNameCtrl.text = customer.lastName;
-      _addressCtrl.text = customer.address;
-      _postCodeCtrl.text = customer.postCode;
-      _cityCtrl.text = customer.postAddress;
-    });
+  void dispose() {
+    _firstNameCtrl.dispose();
+    _lastNameCtrl.dispose();
+    _addressCtrl.dispose();
+    _postCodeCtrl.dispose();
+    _cityCtrl.dispose();
+    _notesCtrl.dispose();
+    _cardFirstCtrl.dispose();
+    _cardLastCtrl.dispose();
+    _cardNumberCtrl.dispose();
+    _expiryCtrl.dispose();
+    _cvcCtrl.dispose();
+    super.dispose();
   }
 
   void _nextStep() {
@@ -56,27 +60,46 @@ class _CheckoutViewState extends State<CheckoutView> {
     }
   }
 
+  void _prevStep() {
+    if (_currentStep > 0) {
+      setState(() => _currentStep--);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final iMat = context.watch<ImatDataHandler>();
 
-    return Column(
-      children: [
-        step_indicator.CheckoutStepIndicator(currentStep: _currentStep),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingInset),
-            child: Center(child: _buildStepContent(iMat)),
+    return Scaffold(
+      backgroundColor: CheckoutTheme.bg,
+      body: Column(
+        children: [
+          // Stegmätare högst upp
+          step_indicator.CheckoutStepIndicator(currentStep: _currentStep),
+
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppTheme.paddingLarge,
+                vertical: AppTheme.paddingHuge,
+              ),
+              child: Center(
+                child: _buildStepContent(iMat),
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildStepContent(ImatDataHandler iMat) {
     switch (_currentStep) {
       case 0:
-        return Step1Granskning(iMat: iMat, onNext: _nextStep);
+        return Step1Granskning(
+          iMat: iMat,
+          onNext: _nextStep,
+        );
       case 1:
         return Step2Leverans(
           firstNameCtrl: _firstNameCtrl,
@@ -100,37 +123,56 @@ class _CheckoutViewState extends State<CheckoutView> {
         );
       case 3:
         final cart = iMat.getShoppingCart();
-        final totalSum = cart.items.fold<double>(
-          0.0,
-          (sum, item) => sum + item.total,
-        );
+        final totalSum = iMat.shoppingCartTotal();
 
         return Step4Slutfor(
           iMat: iMat,
           cartTotal: totalSum,
           deliveryCost: 49.0,
           deliveryDate: 'Idag, 14:00 - 16:00',
-          paymentLabel:
-              _paymentMethod == 1
-                  ? 'Bankkort'
-                  : (_paymentMethod == 0 ? 'Klarna' : 'Swish'),
-          onPlaceOrder: () {
-            // Här utförs själva köpet
-            // iMat.placeOrder(); // Antag att denna metod rensar korgen och skapar order
+          paymentLabel: _paymentMethod == 1 
+              ? 'Bankkort' 
+              : (_paymentMethod == 0 ? 'Klarna' : 'Swish'),
+          onPlaceOrder: () async {
+            try {
+              // 1. Genomför beställningen (Spara i historik via backend)
+              iMat.placeOrder();
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Tack för din beställning!'),
-                backgroundColor: CheckoutTheme.green,
-              ),
-            );
+              if (mounted) {
+                // 2. Visa bekräftelse enligt temat
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Row(
+                      children: [
+                        Icon(Icons.check_circle, color: Colors.white),
+                        SizedBox(width: AppTheme.paddingMedium),
+                        Text('Tack för din beställning! Ordern har sparats.'),
+                      ],
+                    ),
+                    backgroundColor: AppTheme.primaryGreen,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                    ),
+                  ),
+                );
 
-            // Starta om appen på "Historik"-sidan (index 2 i MainView)
-            // Detta kräver att du har tillgång till setState i MainView,
-            // men för enkelhetens skull kan vi navigera användaren till början.
-            Navigator.of(
-              context,
-            ).pushNamedAndRemoveUntil('/', (route) => false);
+                // 3. Töm varukorgen
+                iMat.shoppingCartClear();
+
+                // 4. Navigera till Historik-sidan
+                widget.onNavigateToHistory(2); // Index 2 är historik i MainView
+              }
+            } catch (e) {
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Kunde inte genomföra ordern. Försök igen.'),
+                    backgroundColor: AppTheme.accentRed,
+                  ),
+                );
+              }
+            }
           },
         );
       default:
