@@ -5,16 +5,10 @@ import 'checkout_theme.dart';
 import 'checkout_widgets.dart';
 
 class Step3Betalning extends StatelessWidget {
-  final int paymentMethod; // 0=Klarna  1=Bank  2=Swish
+  final int paymentMethod;
   final ValueChanged<int> onMethodChanged;
-
-  final TextEditingController cardFirstCtrl;
-  final TextEditingController cardLastCtrl;
-  final TextEditingController cardNumberCtrl;
-  final TextEditingController expiryCtrl;
-  final TextEditingController cvcCtrl;
-
-  final VoidCallback onNext;
+  final TextEditingController cardFirstCtrl, cardLastCtrl, cardNumberCtrl, expiryCtrl, cvcCtrl;
+  final VoidCallback onNext, onPrev;
 
   const Step3Betalning({
     super.key,
@@ -26,84 +20,100 @@ class Step3Betalning extends StatelessWidget {
     required this.expiryCtrl,
     required this.cvcCtrl,
     required this.onNext,
+    required this.onPrev,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 650),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Center(
-            child: Text(
-              '3. Betalning',
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: CheckoutTheme.textDark,
+    return ListenableBuilder(
+      listenable: Listenable.merge([cardFirstCtrl, cardLastCtrl, cardNumberCtrl, expiryCtrl, cvcCtrl]),
+      builder: (context, _) {
+        // Validering: Om bankkort (1) är valt måste fälten vara fyllda. 
+        // Om Klarna (0) eller Swish (2) är valt är det alltid "valid" i detta steg.
+        bool isValid = paymentMethod != 1 ||
+            (cardFirstCtrl.text.isNotEmpty &&
+                cardLastCtrl.text.isNotEmpty &&
+                cardNumberCtrl.text.length == 16 &&
+                expiryCtrl.text.isNotEmpty &&
+                cvcCtrl.text.isNotEmpty);
+
+        return ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 650),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Center(
+                child: Text(
+                  '3. Betalning',
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: AppTheme.paddingLarge),
+              const SizedBox(height: AppTheme.paddingLarge),
+              const Text('Välj betalsätt...', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+              const SizedBox(height: AppTheme.paddingCompact),
+              
+              _PaymentOption(
+                index: 0,
+                selected: paymentMethod == 0,
+                onTap: () => onMethodChanged(0),
+                logo: const _KlarnaLogo(),
+                label: 'Betala med Klarna',
+              ),
+              const SizedBox(height: AppTheme.paddingXSmall),
+              _PaymentOption(
+                index: 1,
+                selected: paymentMethod == 1,
+                onTap: () => onMethodChanged(1),
+                logo: const _BankLogo(),
+                label: 'Betala med bank',
+              ),
+              const SizedBox(height: AppTheme.paddingXSmall),
+              _PaymentOption(
+                index: 2,
+                selected: paymentMethod == 2,
+                onTap: () => onMethodChanged(2),
+                logo: const _SwishLogo(),
+                label: 'Betala med Swish',
+              ),
+              const SizedBox(height: AppTheme.paddingMedium),
 
-          const Text(
-            'Välj betalsätt...',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: AppTheme.paddingCompact),
+              // Dynamiskt innehåll baserat på val
+              if (paymentMethod == 1)
+                _CardDetailsCard(
+                  cardFirstCtrl: cardFirstCtrl,
+                  cardLastCtrl: cardLastCtrl,
+                  cardNumberCtrl: cardNumberCtrl,
+                  expiryCtrl: expiryCtrl,
+                  cvcCtrl: cvcCtrl,
+                )
+              else if (paymentMethod == 0)
+                const CheckoutCard(
+                  child: Text("Du kommer att skickas vidare till Klarna för att slutföra betalningen efter att du klickat på Slutför."),
+                )
+              else if (paymentMethod == 2)
+                const CheckoutCard(
+                  child: Text("Öppna Swish-appen på din telefon efter att du klickat på Slutför för att godkänna betalningen."),
+                ),
 
-          // Payment options - matcha image_2.png layout
-          _PaymentOption(
-            index: 0,
-            selected: paymentMethod == 0,
-            onTap: () => onMethodChanged(0),
-            logo: const _KlarnaLogo(),
-            label: 'Betala med Klarna',
+              const SizedBox(height: AppTheme.paddingMedium),
+              
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  NavButton(label: 'Tillbaka', onPressed: onPrev, outlined: true),
+                  NavButton(label: 'Slutför', onPressed: isValid ? onNext : null),
+                ],
+              ),
+            ],
           ),
-          const SizedBox(height: AppTheme.paddingXSmall),
-          _PaymentOption(
-            index: 1,
-            selected: paymentMethod == 1,
-            onTap: () => onMethodChanged(1),
-            logo: const _BankLogo(),
-            label: 'Betala med bank',
-          ),
-          const SizedBox(height: AppTheme.paddingXSmall),
-          _PaymentOption(
-            index: 2,
-            selected: paymentMethod == 2,
-            onTap: () => onMethodChanged(2),
-            logo: const _SwishLogo(),
-            label: 'Betala med Swish',
-          ),
-
-          const SizedBox(height: AppTheme.paddingMedium),
-
-          // Card details CARD – placement according to image_2.png
-          // Only shown when Bank is selected
-          if (paymentMethod == 1)
-            _CardDetailsCard(
-              cardFirstCtrl: cardFirstCtrl,
-              cardLastCtrl: cardLastCtrl,
-              cardNumberCtrl: cardNumberCtrl,
-              expiryCtrl: expiryCtrl,
-              cvcCtrl: cvcCtrl,
-            ),
-
-          const SizedBox(height: AppTheme.paddingMedium),
-          Align(
-            alignment: Alignment.centerRight,
-            child: NavButton(label: 'Slutför', onPressed: onNext),
-          ),
-          const SizedBox(height: AppTheme.paddingLarge),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
-// ── Selectable payment row, adjusted to image_2.png ──
+// ── Hjälp-widgets (De som saknades) ──
+
 class _PaymentOption extends StatelessWidget {
   final int index;
   final bool selected;
@@ -121,36 +131,35 @@ class _PaymentOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppTheme.paddingBlock,
-          vertical: AppTheme.paddingMediumSmall,
-        ),
+        padding: const EdgeInsets.all(AppTheme.paddingMedium),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: selected ? CheckoutTheme.green.withOpacity(0.05) : Colors.white,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
           border: Border.all(
             color: selected ? CheckoutTheme.green : CheckoutTheme.border,
-            width: selected ? 1.5 : 1,
+            width: selected ? 2 : 1,
           ),
         ),
         child: Row(
           children: [
-            Radio<int>(
-              value: index,
-              groupValue: selected ? index : -1,
-              onChanged: (_) => onTap(),
-              // Matcha skiss, radio-knappen är mörk
-              activeColor: CheckoutTheme.textDark,
-            ),
-            const SizedBox(width: AppTheme.paddingSmall),
             logo,
-            const SizedBox(width: AppTheme.paddingMediumSmall),
-            Text(
-              label,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            const SizedBox(width: AppTheme.paddingMedium),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                  color: selected ? CheckoutTheme.green : CheckoutTheme.textDark,
+                ),
+              ),
+            ),
+            Icon(
+              selected ? Icons.radio_button_checked : Icons.radio_button_off,
+              color: selected ? CheckoutTheme.green : CheckoutTheme.textMuted,
             ),
           ],
         ),
@@ -159,13 +168,8 @@ class _PaymentOption extends StatelessWidget {
   }
 }
 
-// ── Card details form, simplified layout matching image_2.png ──
 class _CardDetailsCard extends StatelessWidget {
-  final TextEditingController cardFirstCtrl;
-  final TextEditingController cardLastCtrl;
-  final TextEditingController cardNumberCtrl;
-  final TextEditingController expiryCtrl;
-  final TextEditingController cvcCtrl;
+  final TextEditingController cardFirstCtrl, cardLastCtrl, cardNumberCtrl, expiryCtrl, cvcCtrl;
 
   const _CardDetailsCard({
     required this.cardFirstCtrl,
@@ -181,160 +185,55 @@ class _CardDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Uppgifter...',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: AppTheme.paddingBlock),
-
-          // Name form - simplified to single row
           Row(
             children: [
-              Expanded(child: const FieldLabel('Namn på kortet Förnamn')),
-              Expanded(child: const FieldLabel('Efternamn')),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const FieldLabel('Förnamn'), CheckoutTextField(controller: cardFirstCtrl)])),
+              const SizedBox(width: AppTheme.paddingMedium),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const FieldLabel('Efternamn'), CheckoutTextField(controller: cardLastCtrl)])),
             ],
           ),
-          Row(
-            children: [
-              Expanded(child: CheckoutTextField(controller: cardFirstCtrl)),
-              const SizedBox(width: AppTheme.paddingBlock),
-              Expanded(child: CheckoutTextField(controller: cardLastCtrl)),
-            ],
-          ),
-
-          const SizedBox(height: AppTheme.paddingMediumSmall),
-          const FieldLabel('Kortuppgifter Kortnummer'),
-          TextField(
+          const FieldLabel('Kortnummer'),
+          CheckoutTextField(
             controller: cardNumberCtrl,
+            hint: 'xxxx xxxx xxxx xxxx',
             keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(16),
-            ],
-            decoration: _inputDec(hint: 'Kortnummer'),
           ),
-          const SizedBox(height: AppTheme.paddingMediumSmall),
-
           Row(
             children: [
-              CheckoutTextField(
-                controller: expiryCtrl,
-                width: 140,
-                hint: 'MM/YY',
-              ),
-              const SizedBox(width: AppTheme.paddingBlock),
-              CheckoutTextField(controller: cvcCtrl, width: 100, hint: 'CVC'),
-              const Spacer(),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const FieldLabel('Utgångsdatum'), CheckoutTextField(controller: expiryCtrl, hint: 'MM/ÅÅ')])),
+              const SizedBox(width: AppTheme.paddingMedium),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const FieldLabel('CVC'), CheckoutTextField(controller: cvcCtrl, hint: 'xxx')])),
             ],
           ),
         ],
       ),
     );
   }
-
-  InputDecoration _inputDec({String? hint}) => InputDecoration(
-    hintText: hint,
-    hintStyle: const TextStyle(color: CheckoutTheme.textMuted, fontSize: 13),
-    contentPadding: const EdgeInsets.symmetric(
-      horizontal: AppTheme.paddingMediumSmall,
-      vertical: AppTheme.paddingCompact,
-    ),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-      borderSide: const BorderSide(color: CheckoutTheme.border),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-      borderSide: const BorderSide(color: CheckoutTheme.border),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-      borderSide: const BorderSide(color: CheckoutTheme.green, width: 1.5),
-    ),
-    filled: true,
-    fillColor: Colors.white,
-  );
 }
 
-// ── Payment logos from sketches ──
 class _KlarnaLogo extends StatelessWidget {
   const _KlarnaLogo();
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(
-      horizontal: AppTheme.paddingSmall,
-      vertical: AppTheme.paddingMicro,
-    ),
-    decoration: BoxDecoration(
-      color: const Color(0xFFFFB3C7),
-      borderRadius: BorderRadius.circular(AppTheme.radiusTight),
-    ),
-    child: const Text(
-      'Klarna',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 12,
-        color: Color(0xFF1A1A2E),
-      ),
-    ),
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(color: const Color(0xFFFFB3C7), borderRadius: BorderRadius.circular(4)),
+    child: Text('Klarna.', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: Colors.black)),
   );
 }
 
 class _BankLogo extends StatelessWidget {
   const _BankLogo();
   @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      Container(
-        width: 24,
-        height: 24,
-        decoration: const BoxDecoration(
-          color: Color(0xFFEB5757),
-          shape: BoxShape.circle,
-        ),
-      ),
-      Transform.translate(
-        offset: Offset(-AppTheme.paddingSmall, 0),
-        child: Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8A93E).withValues(alpha: 0.9),
-            shape: BoxShape.circle,
-          ),
-        ),
-      ),
-      Transform.translate(
-        offset: Offset(-AppTheme.paddingMediumSmall, 0),
-        child: const Text(
-          'VISA',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-            color: Color(0xFF1A1F71),
-          ),
-        ),
-      ),
-    ],
-  );
+  Widget build(BuildContext context) => const Icon(Icons.credit_card, color: CheckoutTheme.textDark);
 }
 
 class _SwishLogo extends StatelessWidget {
   const _SwishLogo();
   @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      Text('⟳', style: TextStyle(fontSize: 17, color: Color(0xFFFF5A00))),
-      SizedBox(width: AppTheme.paddingMicro),
-      Text(
-        'swish',
-        style: TextStyle(
-          fontStyle: FontStyle.italic,
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
-          color: Color(0xFF1A1A1A),
-        ),
-      ),
-    ],
+  Widget build(BuildContext context) => Container(
+    width: 24,
+    height: 24,
+    decoration: const BoxDecoration(color: Color(0xFF2DABE2), shape: BoxShape.circle),
+    child: const Center(child: Icon(Icons.import_export, size: 16, color: Colors.white)),
   );
 }

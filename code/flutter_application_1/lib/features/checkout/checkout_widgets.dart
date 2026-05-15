@@ -13,9 +13,7 @@ class CheckoutCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin:
-          margin ??
-          const EdgeInsets.only(bottom: AppTheme.paddingMediumSmall),
+      margin: margin ?? const EdgeInsets.only(bottom: AppTheme.paddingMediumSmall),
       padding: const EdgeInsets.all(AppTheme.paddingMedium),
       decoration: BoxDecoration(
         color: CheckoutTheme.card,
@@ -30,112 +28,74 @@ class CheckoutCard extends StatelessWidget {
 // ── Navigation button ──
 class NavButton extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed; // Korrigerat till nullable för att tillåta inaktivering
   final bool outlined;
 
   const NavButton({
     super.key,
     required this.label,
-    required this.onPressed,
+    this.onPressed, // Tog bort required för att tillåta null
     this.outlined = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Använder CheckoutTheme konstanter
     final Color bg = outlined ? Colors.white : CheckoutTheme.green;
-    final Color fg = outlined ? CheckoutTheme.textDark : Colors.white;
+    final Color fg = outlined ? CheckoutTheme.green : Colors.white;
+    
+    // Definiera kantlinje om knappen är 'outlined'
+    final BorderSide side = outlined 
+        ? const BorderSide(color: CheckoutTheme.green, width: 1.5) 
+        : BorderSide.none;
 
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: onPressed, // Flutter inaktiverar knappen automatiskt om onPressed är null
       style: ElevatedButton.styleFrom(
         backgroundColor: bg,
         foregroundColor: fg,
+        // Färger för inaktiverat läge (när onPressed är null)
+        disabledBackgroundColor: Colors.grey[300],
+        disabledForegroundColor: Colors.grey[600],
+        elevation: outlined ? 0 : 2,
+        side: side,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+        ),
         padding: const EdgeInsets.symmetric(
           horizontal: AppTheme.paddingLarge,
-          vertical: AppTheme.paddingBlock,
+          vertical: AppTheme.paddingMedium,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusControl),
-          side:
-              outlined
-                  ? const BorderSide(color: CheckoutTheme.border)
-                  : BorderSide.none,
-        ),
-        elevation: outlined ? 0 : 1,
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (outlined) ...[
-            const Icon(Icons.arrow_back, size: 15),
-            const SizedBox(width: AppTheme.paddingSmall),
-          ],
-          Text(
-            label,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-          ),
-          if (!outlined) ...[
-            const SizedBox(width: AppTheme.paddingSmall),
-            const Icon(Icons.arrow_forward, size: 15),
-          ],
-        ],
+      child: Text(
+        label,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       ),
     );
   }
 }
 
-// ── Summary row (for Step 4) ──
-class SummaryRow extends StatelessWidget {
+// ── Field Label ──
+class FieldLabel extends StatelessWidget {
   final String label;
-  final String value;
-  final bool bold;
-  final bool grey; // Grå text-stöd förort/adress
-
-  const SummaryRow(
-    this.label,
-    this.value, {
-    super.key,
-    this.bold = false,
-    this.grey = false,
-  });
+  const FieldLabel(this.label, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    final style = TextStyle(
-      fontSize: 14,
-      fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-      color: grey ? CheckoutTheme.textMuted : CheckoutTheme.textDark,
-    );
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingTiny),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text(label, style: style), Text(value, style: style)],
+      padding: const EdgeInsets.only(bottom: 6, top: 12),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: CheckoutTheme.textDark,
+        ),
       ),
     );
   }
 }
 
-// ── Field label (grey) ──
-class FieldLabel extends StatelessWidget {
-  final String text;
-  const FieldLabel(this.text, {super.key});
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(
-      bottom: AppTheme.paddingTiny,
-      top: AppTheme.paddingTiny,
-    ),
-    child: Text(
-      text,
-      style: const TextStyle(fontSize: 13, color: CheckoutTheme.textMuted),
-    ),
-  );
-}
-
-// ── Styled text field ──
+// ── Checkout TextField ──
 class CheckoutTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? hint;
@@ -152,39 +112,79 @@ class CheckoutTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final txf = TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: const TextStyle(
-          color: CheckoutTheme.textMuted,
-          fontSize: 13,
+    return SizedBox(
+      width: width ?? double.infinity,
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(
+            color: CheckoutTheme.textMuted,
+            fontSize: 13,
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppTheme.paddingMediumSmall,
+            vertical: AppTheme.paddingCompact,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+            borderSide: const BorderSide(color: CheckoutTheme.border),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+            borderSide: const BorderSide(color: CheckoutTheme.border),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+            borderSide: const BorderSide(color: CheckoutTheme.green, width: 1.5),
+          ),
+          filled: true,
+          fillColor: Colors.white,
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppTheme.paddingMediumSmall,
-          vertical: AppTheme.paddingCompact,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-          borderSide: const BorderSide(color: CheckoutTheme.border),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-          borderSide: const BorderSide(color: CheckoutTheme.border),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-          borderSide: const BorderSide(color: CheckoutTheme.green, width: 1.5),
-        ),
-        filled: true,
-        fillColor: Colors.white,
       ),
     );
+  }
+}
 
-    if (width != null) {
-      return SizedBox(width: width, child: txf);
-    }
-    return txf;
+// ── Summary Row ──
+class SummaryRow extends StatelessWidget {
+  final String label;
+  final String value;
+  final bool bold;
+  final bool grey;
+
+  const SummaryRow(
+    this.label, 
+    this.value, {
+    super.key, 
+    this.bold = false, 
+    this.grey = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label, 
+            style: TextStyle(
+              color: grey ? CheckoutTheme.textMuted : CheckoutTheme.textDark, 
+              fontSize: 15
+            )
+          ),
+          Text(
+            value, 
+            style: TextStyle(
+              fontWeight: bold ? FontWeight.bold : FontWeight.normal, 
+              fontSize: 15
+            )
+          ),
+        ],
+      ),
+    );
   }
 }

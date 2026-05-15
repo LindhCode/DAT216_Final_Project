@@ -74,9 +74,7 @@ class _CheckoutViewState extends State<CheckoutView> {
       backgroundColor: CheckoutTheme.bg,
       body: Column(
         children: [
-          // Stegmätare högst upp
           step_indicator.CheckoutStepIndicator(currentStep: _currentStep),
-
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(
@@ -109,6 +107,7 @@ class _CheckoutViewState extends State<CheckoutView> {
           cityCtrl: _cityCtrl,
           notesCtrl: _notesCtrl,
           onNext: _nextStep,
+          onPrev: _prevStep,
         );
       case 2:
         return Step3Betalning(
@@ -120,11 +119,10 @@ class _CheckoutViewState extends State<CheckoutView> {
           expiryCtrl: _expiryCtrl,
           cvcCtrl: _cvcCtrl,
           onNext: _nextStep,
+          onPrev: _prevStep,
         );
       case 3:
-        final cart = iMat.getShoppingCart();
         final totalSum = iMat.shoppingCartTotal();
-
         return Step4Slutfor(
           iMat: iMat,
           cartTotal: totalSum,
@@ -135,11 +133,8 @@ class _CheckoutViewState extends State<CheckoutView> {
               : (_paymentMethod == 0 ? 'Klarna' : 'Swish'),
           onPlaceOrder: () async {
             try {
-              // 1. Genomför beställningen (Spara i historik via backend)
               iMat.placeOrder();
-
               if (mounted) {
-                // 2. Visa bekräftelse enligt temat
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: const Row(
@@ -151,29 +146,23 @@ class _CheckoutViewState extends State<CheckoutView> {
                     ),
                     backgroundColor: AppTheme.primaryGreen,
                     behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-                    ),
                   ),
                 );
-
-                // 3. Töm varukorgen
                 iMat.shoppingCartClear();
-
-                // 4. Navigera till Historik-sidan
-                widget.onNavigateToHistory(2); // Index 2 är historik i MainView
+                widget.onNavigateToHistory(2);
               }
             } catch (e) {
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Kunde inte genomföra ordern. Försök igen.'),
+                    content: Text('Kunde inte genomföra ordern.'),
                     backgroundColor: AppTheme.accentRed,
                   ),
                 );
               }
             }
           },
+          onPrev: _prevStep,
         );
       default:
         return const SizedBox.shrink();
