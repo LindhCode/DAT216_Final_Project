@@ -9,17 +9,21 @@ import 'package:provider/provider.dart';
 /// Produktbild via nätverket
 Widget _productImage(BuildContext context, Product product) {
   final dpr = MediaQuery.devicePixelRatioOf(context);
-  final widthPx = (MediaQuery.sizeOf(context).width * dpr / 6).round().clamp(120, 480);
+  final widthPx = (MediaQuery.sizeOf(context).width * dpr / 4).round().clamp(
+    180,
+    640,
+  );
 
   return Image.network(
     InternetHandler.getImageUrl(product.productId),
     headers: InternetHandler.apiKeyHeader,
-    fit: BoxFit.cover,
+    fit: BoxFit.contain,
     filterQuality: FilterQuality.medium,
     gaplessPlayback: true,
     cacheWidth: widthPx,
-    errorBuilder: (_, __, ___) =>
-        Image.asset('assets/images/placeholder.png', fit: BoxFit.cover),
+    errorBuilder:
+        (_, __, ___) =>
+            Image.asset('assets/images/placeholder.png', fit: BoxFit.cover),
     loadingBuilder: (context, child, progress) {
       if (progress == null) return child;
       return Image.asset('assets/images/placeholder.png', fit: BoxFit.cover);
@@ -38,10 +42,8 @@ class ProductCard extends StatelessWidget {
       child: Consumer<ImatDataHandler>(
         builder: (context, iMat, __) {
           final isFav = iMat.isFavorite(product);
-          
-          // HÄR ÄR FIXEN: Vi går via getShoppingCart() för att nå .items
           final cartItems = iMat.getShoppingCart().items;
-          
+
           ShoppingItem? currentItem;
           for (var item in cartItems) {
             if (item.product.productId == product.productId) {
@@ -49,7 +51,7 @@ class ProductCard extends StatelessWidget {
               break;
             }
           }
-          
+
           final bool inCart = currentItem != null;
 
           return Container(
@@ -58,71 +60,162 @@ class ProductCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 8,
                   offset: const Offset(0, 2),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.02),
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(AppTheme.paddingMediumSmall),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${product.price.toStringAsFixed(2)} kr',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                // Main Content Column
+                Padding(
+                  padding: const EdgeInsets.all(AppTheme.paddingMediumSmall),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 1. Image View - Hardcoded expanded space allocation
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          height:
+                              double
+                                  .infinity, // Forces it to match the newly enlarged card space
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.03),
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusMedium,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusMedium,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(
+                                4.0,
+                              ), // Adds a clean inset frame around your image asset
+                              child: _productImage(context, product),
+                            ),
                           ),
                         ),
-                        Text(
-                          product.unit,
-                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                      const SizedBox(height: 10),
+
+                      // 2. Product Name
+                      Text(
+                        product.name,
+                        style: const TextStyle(
+                          fontSize: 16, // Slightly larger base typography
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1A1A1A),
+                          letterSpacing: -0.2,
                         ),
-                      ],
-                    ),
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      icon: Icon(
-                        isFav ? Icons.favorite : Icons.favorite_border,
-                        color: isFav ? AppTheme.accentRed : Colors.grey,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      onPressed: () => iMat.toggleFavorite(product),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppTheme.paddingSmall,
+                      const SizedBox(height: 4),
+
+                      // 3. Price & Unit Section
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${product.price.toStringAsFixed(2)} kr',
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1A1A1A),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '/ ${product.unit}',
+                            style: TextStyle(
+                              color: Colors.grey.shade500,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
-                      child: _productImage(context, product),
-                    ),
+                      const SizedBox(height: 12),
+
+                      // 4. Interactive Action Button Row
+                      SizedBox(
+                        width: double.infinity,
+                        height: 42,
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          transitionBuilder: (
+                            Widget child,
+                            Animation<double> animation,
+                          ) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: ScaleTransition(
+                                scale: animation,
+                                child: child,
+                              ),
+                            );
+                          },
+                          child:
+                              inCart
+                                  ? _buildQuantityControl(
+                                    iMat,
+                                    currentItem,
+                                    context,
+                                  )
+                                  : _buildAddButton(iMat),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Text(
-                  product.name,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: AppTheme.paddingSmall),
-                
-                SizedBox(
-                  width: double.infinity,
-                  height: 40,
-                  child: inCart 
-                    ? _buildQuantityControl(iMat, currentItem!)
-                    : _buildAddButton(iMat),
+
+                // Floating Favorite Button (Top Right corner overlay)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(32),
+                      onTap: () => iMat.toggleFavorite(product),
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 150),
+                          child: Icon(
+                            isFav
+                                ? Icons.favorite
+                                : Icons.favorite_border_rounded,
+                            key: ValueKey<bool>(isFav),
+                            size: 20,
+                            color:
+                                isFav
+                                    ? AppTheme.accentRed
+                                    : Colors.grey.shade400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -134,67 +227,98 @@ class ProductCard extends StatelessWidget {
 
   Widget _buildAddButton(ImatDataHandler iMat) {
     return ElevatedButton(
+      key: const ValueKey('add_btn'),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppTheme.primaryGreen,
         foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
+        padding: EdgeInsets.zero,
       ),
       onPressed: () {
-        // Använder din handlers shoppingCartAdd
         iMat.shoppingCartAdd(ShoppingItem(product, amount: 1.0));
       },
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.add_circle_outline, size: 18),
-          SizedBox(width: AppTheme.paddingSmall),
-          Text('Lägg till', style: TextStyle(fontWeight: FontWeight.bold)),
+          Icon(Icons.add_rounded, size: 20),
+          SizedBox(width: 4),
+          Text(
+            'Köp',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              letterSpacing: 0.2,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildQuantityControl(ImatDataHandler iMat, ShoppingItem item) {
+  Widget _buildQuantityControl(
+    ImatDataHandler iMat,
+    ShoppingItem item,
+    BuildContext context,
+  ) {
     return Container(
+      key: const ValueKey('qty_control'),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 90, 119, 74),
-        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+        color: AppTheme.primaryGreen.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppTheme.primaryGreen.withOpacity(0.25),
+          width: 1,
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            padding: EdgeInsets.zero,
-            icon: const Icon(Icons.remove, color: Colors.white, size: 20),
+          _buildMicrosizedIconButton(
+            icon: Icons.remove_rounded,
+            color: AppTheme.accentRed, // Permanently red minus button
             onPressed: () {
               if (item.amount > 1) {
-                // Minska med 1 via shoppingCartAdd
                 iMat.shoppingCartAdd(ShoppingItem(product, amount: -1.0));
               } else {
-                // Ta bort helt
                 iMat.shoppingCartRemove(item);
               }
             },
           ),
           Text(
             '${item.amount.toInt()} st',
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppTheme.primaryGreen.withAlpha(230),
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: 14,
             ),
           ),
-          IconButton(
-            padding: EdgeInsets.zero,
-            icon: const Icon(Icons.add, color: Colors.white, size: 20),
+          _buildMicrosizedIconButton(
+            icon: Icons.add_rounded,
+            color: AppTheme.primaryGreen,
             onPressed: () {
               iMat.shoppingCartAdd(ShoppingItem(product, amount: 1.0));
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMicrosizedIconButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Icon(icon, color: color, size: 20),
+        ),
       ),
     );
   }
@@ -210,13 +334,24 @@ class ProductsBody extends StatelessWidget {
     if (products.isEmpty) {
       return const Center(child: Text("Hittade inga produkter."));
     }
+
+    // Determine the column count dynamically based on the display size
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    int crossAxisCount = 2;
+    if (screenWidth > 900) {
+      crossAxisCount = 4;
+    } else if (screenWidth > 600) {
+      crossAxisCount = 3;
+    }
+
     return GridView.builder(
       padding: const EdgeInsets.all(AppTheme.paddingMedium),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 240,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount, // Hardcoded layout grid configurations
         mainAxisSpacing: AppTheme.paddingMedium,
         crossAxisSpacing: AppTheme.paddingMedium,
-        childAspectRatio: 0.72, 
+        childAspectRatio:
+            0.85, // Balanced card height-to-width ratio to give maximum room to images
       ),
       itemCount: products.length,
       itemBuilder: (context, index) => ProductCard(product: products[index]),

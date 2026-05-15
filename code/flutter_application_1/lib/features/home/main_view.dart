@@ -71,7 +71,7 @@ class _MainViewState extends State<MainView> {
             : GridView.builder(
                 padding: const EdgeInsets.all(AppTheme.paddingLarge),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
+                  crossAxisCount: 3,
                   childAspectRatio: 0.75,
                   crossAxisSpacing: AppTheme.paddingInset,
                   mainAxisSpacing: AppTheme.paddingInset,
@@ -95,7 +95,7 @@ class _MainViewState extends State<MainView> {
         return GridView.builder(
           padding: const EdgeInsets.all(AppTheme.paddingLarge),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
+            crossAxisCount: 3,
             childAspectRatio: 0.75,
             crossAxisSpacing: AppTheme.paddingInset,
             mainAxisSpacing: AppTheme.paddingInset,

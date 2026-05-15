@@ -13,7 +13,6 @@ class Step1Granskning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = iMat.getShoppingCart();
-    // Beräkna totalpriset genom att summera varje rads total
     final totalSum = cart.items.fold<double>(
       0.0,
       (sum, item) => sum + item.total,
@@ -41,27 +40,19 @@ class Step1Granskning extends StatelessWidget {
                   'Dina varor',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: AppTheme.paddingMedium),
+                const SizedBox(height: 16),
 
                 if (cart.items.isEmpty)
                   const Padding(
-                    padding: EdgeInsets.symmetric(vertical: AppTheme.paddingInset),
+                    padding: EdgeInsets.symmetric(vertical: 20),
                     child: Center(child: Text("Din varukorg är tom.")),
                   )
                 else
                   ...cart.items.map(
                     (item) => Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: AppTheme.paddingMediumSmall,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Row(
                         children: [
-                          const Icon(
-                            Icons.shopping_basket_outlined,
-                            color: CheckoutTheme.green,
-                            size: 20,
-                          ),
-                          const SizedBox(width: AppTheme.paddingMediumSmall),
                           Expanded(
                             child: Text(
                               item.product.name,
@@ -74,7 +65,7 @@ class Step1Granskning extends StatelessWidget {
                               color: CheckoutTheme.textMuted,
                             ),
                           ),
-                          const SizedBox(width: AppTheme.paddingLarge),
+                          const SizedBox(width: 24),
                           Text(
                             '${item.total.toStringAsFixed(2)} kr',
                             style: const TextStyle(fontWeight: FontWeight.bold),
@@ -114,7 +105,7 @@ class Step1Granskning extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: NavButton(
-              label: 'Till Leverans',
+              label: 'Till Leverans >',
               onPressed: cart.items.isEmpty ? () {} : onNext,
             ),
           ),

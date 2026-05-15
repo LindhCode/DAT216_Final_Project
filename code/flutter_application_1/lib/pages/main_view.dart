@@ -11,7 +11,7 @@ import 'package:imat_app/features/history/history_page.dart';
 
 // Widgets
 import 'package:imat_app/shared/widgets/category.dart';
-import 'package:imat_app/shared/widgets/product_card.dart'; 
+import 'package:imat_app/shared/widgets/product_card.dart';
 import 'package:imat_app/shared/widgets/shoppingcart.dart';
 import 'package:imat_app/shared/widgets/top_navbar.dart';
 import 'package:imat_app/shared/widgets/breadcrumbs.dart'; // Säkerställ att filen finns
@@ -28,7 +28,7 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   final TextEditingController _searchController = TextEditingController();
-  int selectedIndex = 0; 
+  int selectedIndex = 0;
 
   void _resetToHome(BuildContext context) {
     setState(() {
@@ -45,12 +45,10 @@ class _MainViewState extends State<MainView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. BREADCRUMBS & SORTERING
-            const Breadcrumbs(), 
-            
+            const Breadcrumbs(),
+
             // 2. PRODUKT-GRID
-            Expanded(
-              child: ProductsBody(iMat: iMat),
-            ),
+            Expanded(child: ProductsBody(iMat: iMat)),
           ],
         );
       case 2:
@@ -92,15 +90,14 @@ class _MainViewState extends State<MainView> {
               iMat.selectSelection(iMat.findProducts(value));
             },
           ),
-          
+
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // SIDEBAR KATEGORIER (syns bara på hem-vyn)
-                if (selectedIndex == 0) 
-                  CategorySidebar(iMat: iMat),
-                
+                if (selectedIndex == 0) CategorySidebar(iMat: iMat),
+
                 // MITTEN: Breadcrumbs + Produkter / Eller andra sidor
                 Expanded(
                   child: Container(
@@ -108,7 +105,7 @@ class _MainViewState extends State<MainView> {
                     child: _buildBody(iMat),
                   ),
                 ),
-                
+
                 // SIDEBAR VARUKORG (syns ej i kassan)
                 if (selectedIndex != 4)
                   CartSidebar(

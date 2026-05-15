@@ -10,7 +10,7 @@ class Step2Leverans extends StatelessWidget {
   final TextEditingController cityCtrl;
   final TextEditingController notesCtrl;
   final VoidCallback onNext;
-  final VoidCallback onPrev; // Lagt till denna rad
+  final VoidCallback onPrev;
 
   const Step2Leverans({
     super.key,
@@ -21,12 +21,11 @@ class Step2Leverans extends StatelessWidget {
     required this.cityCtrl,
     required this.notesCtrl,
     required this.onNext,
-    required this.onPrev, // Lagt till denna rad
+    required this.onPrev,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Lyssnar på alla controllers för att validera i realtid
     return ListenableBuilder(
       listenable: Listenable.merge([
         firstNameCtrl,
@@ -36,8 +35,8 @@ class Step2Leverans extends StatelessWidget {
         cityCtrl,
       ]),
       builder: (context, _) {
-        // Kontrollera om alla obligatoriska fält är ifyllda
-        bool isValid = firstNameCtrl.text.isNotEmpty &&
+        bool isValid =
+            firstNameCtrl.text.isNotEmpty &&
             lastNameCtrl.text.isNotEmpty &&
             addressCtrl.text.isNotEmpty &&
             postCodeCtrl.text.isNotEmpty &&
@@ -51,16 +50,19 @@ class Step2Leverans extends StatelessWidget {
                 '2. Leverans',
                 style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: AppTheme.paddingLarge),
+              const SizedBox(height: 24),
               CheckoutCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Vart ska vi leverera?',
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const SizedBox(height: AppTheme.paddingMedium),
+                    const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
@@ -112,22 +114,24 @@ class Step2Leverans extends StatelessWidget {
                       ],
                     ),
                     const FieldLabel('Övrigt (t.ex. portkod)'),
-                    CheckoutTextField(controller: notesCtrl, hint: 'Skriv här...'),
+                    CheckoutTextField(
+                      controller: notesCtrl,
+                      hint: 'Skriv här...',
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: AppTheme.paddingMedium),
-              // Knappar på samma rad
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   NavButton(
-                    label: 'Tillbaka',
+                    label: '< Tillbaka',
                     onPressed: onPrev,
                     outlined: true,
                   ),
                   NavButton(
-                    label: 'Betalning',
+                    label: 'Betalning >',
                     onPressed: isValid ? onNext : null,
                   ),
                 ],
