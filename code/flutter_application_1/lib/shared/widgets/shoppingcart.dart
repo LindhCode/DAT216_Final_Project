@@ -154,32 +154,40 @@ class CartSidebar extends StatelessWidget {
                         ),
                       ],
                     ),
+                    const SizedBox(height: AppTheme.paddingSmall),
+                    ElevatedButton(
+                      onPressed: items.isEmpty ? null : onCheckout,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryGreen,
+                        minimumSize: Size(
+                          double.infinity,
+                          AppTheme.paddingWide,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusSmall,
+                          ),
+                        ),
+                      ),
+                      child: const Text(
+                        "Gå till kassan",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
                     const SizedBox(height: AppTheme.paddingMediumSmall),
                     ElevatedButton(
                       onPressed:
                           items.isEmpty ? null : () => iMat.shoppingCartClear(),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.accentRed,
-                        minimumSize: Size(double.infinity, AppTheme.paddingHero),
+                        minimumSize: Size(
+                          double.infinity,
+                          AppTheme.paddingHero,
+                        ),
                       ),
                       child: const Text(
                         "Töm varukorgen",
                         style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(height: AppTheme.paddingSmall),
-                    ElevatedButton(
-                      onPressed: items.isEmpty ? null : onCheckout,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryGreen,
-                        minimumSize: Size(double.infinity, AppTheme.paddingWide),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-                        ),
-                      ),
-                      child: const Text(
-                        "Gå till kassan",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ),
                   ],

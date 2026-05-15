@@ -16,40 +16,43 @@ class HistoryPage extends StatelessWidget {
     // VIKTIGT: Ingen Scaffold, ingen TopNavbar och ingen Column runt allt här.
     // Vi returnerar bara scroll-vyn eftersom MainView sköter resten.
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppTheme.paddingPage,
-        vertical: AppTheme.paddingHero,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Mina tidigare köp',
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(height: AppTheme.paddingLarge),
-
-          if (orders.isEmpty)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: AppTheme.paddingWide),
-                child: Text('Du har inte gjort några köp än.'),
+      child: Center(
+        child: Container(
+          width: 600,
+          margin: const EdgeInsets.symmetric(vertical: AppTheme.paddingInset),
+          padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingLarge),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Mina tidigare köp',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
-            )
-          else
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: orders.length,
-              itemBuilder: (context, index) {
-                return _buildOrderCard(context, orders[index], dataHandler);
-              },
-            ),
-        ],
+              const SizedBox(height: AppTheme.paddingLarge),
+
+              if (orders.isEmpty)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: AppTheme.paddingWide),
+                    child: Text('Du har inte gjort några köp än.'),
+                  ),
+                )
+              else
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    return _buildOrderCard(context, orders[index], dataHandler);
+                  },
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -93,7 +96,7 @@ class HistoryPage extends StatelessWidget {
               '${order.getTotal().toStringAsFixed(2)} kr',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                color: AppTheme.primaryGreen,
+                color: Color.fromARGB(255, 0, 0, 0),
               ),
             ),
           ],
@@ -122,27 +125,44 @@ class HistoryPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: AppTheme.paddingMedium),
-            child: TextButton.icon(
-              onPressed: () {
-                for (var item in order.items) {
-                  dataHandler.shoppingCartAdd(
-                    ShoppingItem(item.product, amount: item.amount),
-                  );
-                }
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Order #${order.orderNumber} tillagd i varukorgen!',
+            padding: const EdgeInsets.only(
+              right: AppTheme.paddingLarge,
+              bottom: AppTheme.paddingMedium,
+            ),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  for (var item in order.items) {
+                    dataHandler.shoppingCartAdd(
+                      ShoppingItem(item.product, amount: item.amount),
+                    );
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Order #${order.orderNumber} tillagd i varukorgen!',
+                      ),
+                      backgroundColor: AppTheme.primaryGreen,
                     ),
-                    backgroundColor: AppTheme.primaryGreen,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryGreen,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppTheme.paddingLarge,
+                    vertical: AppTheme.paddingSmall,
                   ),
-                );
-              },
-              icon: const Icon(Icons.refresh, color: AppTheme.primaryGreen),
-              label: const Text(
-                'Köp igen',
-                style: TextStyle(color: AppTheme.primaryGreen),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                ),
+                icon: const Icon(Icons.refresh, color: Colors.white),
+                label: const Text(
+                  'Köp igen',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ),

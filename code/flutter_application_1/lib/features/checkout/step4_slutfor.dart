@@ -29,7 +29,7 @@ class Step4Slutfor extends StatelessWidget {
         '${val.toStringAsFixed(2).replaceAll('.', ',')} kr';
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 600),
+      constraints: const BoxConstraints(maxWidth: 700),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -82,7 +82,7 @@ class Step4Slutfor extends StatelessWidget {
                       vertical: AppTheme.paddingMedium,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                      borderRadius: BorderRadius.circular(999),
                     ),
                   ),
                   child: const Text(

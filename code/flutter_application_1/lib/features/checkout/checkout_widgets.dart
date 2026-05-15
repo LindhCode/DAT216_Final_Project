@@ -13,7 +13,8 @@ class CheckoutCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: margin ?? const EdgeInsets.only(bottom: AppTheme.paddingMediumSmall),
+      margin:
+          margin ?? const EdgeInsets.only(bottom: AppTheme.paddingMediumSmall),
       padding: const EdgeInsets.all(AppTheme.paddingMedium),
       decoration: BoxDecoration(
         color: CheckoutTheme.card,
@@ -28,7 +29,8 @@ class CheckoutCard extends StatelessWidget {
 // ── Navigation button ──
 class NavButton extends StatelessWidget {
   final String label;
-  final VoidCallback? onPressed; // Korrigerat till nullable för att tillåta inaktivering
+  final VoidCallback?
+  onPressed; // Korrigerat till nullable för att tillåta inaktivering
   final bool outlined;
 
   const NavButton({
@@ -41,15 +43,17 @@ class NavButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color bg = outlined ? Colors.white : CheckoutTheme.green;
-    final Color fg = outlined ? CheckoutTheme.green : Colors.white;
-    
+    final Color fg = outlined ? Colors.black : Colors.white;
+
     // Definiera kantlinje om knappen är 'outlined'
-    final BorderSide side = outlined 
-        ? const BorderSide(color: CheckoutTheme.green, width: 1.5) 
-        : BorderSide.none;
+    final BorderSide side =
+        outlined
+            ? const BorderSide(color: Colors.black, width: 1.5)
+            : BorderSide.none;
 
     return ElevatedButton(
-      onPressed: onPressed, // Flutter inaktiverar knappen automatiskt om onPressed är null
+      onPressed:
+          onPressed, // Flutter inaktiverar knappen automatiskt om onPressed är null
       style: ElevatedButton.styleFrom(
         backgroundColor: bg,
         foregroundColor: fg,
@@ -58,9 +62,7 @@ class NavButton extends StatelessWidget {
         disabledForegroundColor: Colors.grey[600],
         elevation: outlined ? 0 : 2,
         side: side,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
         padding: const EdgeInsets.symmetric(
           horizontal: AppTheme.paddingLarge,
           vertical: AppTheme.paddingMedium,
@@ -137,7 +139,10 @@ class CheckoutTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-            borderSide: const BorderSide(color: CheckoutTheme.green, width: 1.5),
+            borderSide: const BorderSide(
+              color: CheckoutTheme.green,
+              width: 1.5,
+            ),
           ),
           filled: true,
           fillColor: Colors.white,
@@ -155,10 +160,10 @@ class SummaryRow extends StatelessWidget {
   final bool grey;
 
   const SummaryRow(
-    this.label, 
+    this.label,
     this.value, {
-    super.key, 
-    this.bold = false, 
+    super.key,
+    this.bold = false,
     this.grey = false,
   });
 
@@ -170,18 +175,18 @@ class SummaryRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            label, 
+            label,
             style: TextStyle(
-              color: grey ? CheckoutTheme.textMuted : CheckoutTheme.textDark, 
-              fontSize: 15
-            )
+              color: grey ? CheckoutTheme.textMuted : CheckoutTheme.textDark,
+              fontSize: 15,
+            ),
           ),
           Text(
-            value, 
+            value,
             style: TextStyle(
-              fontWeight: bold ? FontWeight.bold : FontWeight.normal, 
-              fontSize: 15
-            )
+              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+              fontSize: 15,
+            ),
           ),
         ],
       ),

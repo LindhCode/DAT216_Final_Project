@@ -92,7 +92,7 @@ class Step1Granskning extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: CheckoutTheme.green,
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -104,9 +104,25 @@ class Step1Granskning extends StatelessWidget {
           const SizedBox(height: AppTheme.paddingMedium),
           Align(
             alignment: Alignment.centerRight,
-            child: NavButton(
-              label: 'Till Leverans >',
-              onPressed: cart.items.isEmpty ? () {} : onNext,
+            child: ElevatedButton(
+              onPressed: cart.items.isEmpty ? null : onNext,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CheckoutTheme.green,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: Colors.grey[300],
+                disabledForegroundColor: Colors.grey[600],
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppTheme.paddingLarge,
+                  vertical: AppTheme.paddingMedium,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+              child: const Text(
+                'Till Leverans >',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],

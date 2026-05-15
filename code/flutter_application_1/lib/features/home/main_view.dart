@@ -41,8 +41,7 @@ class _MainViewState extends State<MainView> {
     }
     var cart = 0;
     for (final i in h.getShoppingCart().items) {
-      cart = 0x3fffffff &
-          (cart * 31 + i.product.productId + i.amount.round());
+      cart = 0x3fffffff & (cart * 31 + i.product.productId + i.amount.round());
     }
     return Object.hash(
       h.products.length,
@@ -63,24 +62,24 @@ class _MainViewState extends State<MainView> {
         final products = iMat.selectProducts;
         return products.isEmpty
             ? const Center(
-                child: Text(
-                  "Inga favoriter hittades.",
-                  style: TextStyle(fontSize: 18),
-                ),
-              )
+              child: Text(
+                "Inga favoriter hittades.",
+                style: TextStyle(fontSize: 18),
+              ),
+            )
             : GridView.builder(
-                padding: const EdgeInsets.all(AppTheme.paddingLarge),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 0.75,
-                  crossAxisSpacing: AppTheme.paddingInset,
-                  mainAxisSpacing: AppTheme.paddingInset,
-                ),
-                cacheExtent: 400,
-                itemCount: products.length,
-                itemBuilder: (context, index) =>
-                    ProductCard(product: products[index]),
-              );
+              padding: const EdgeInsets.all(AppTheme.paddingLarge),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: AppTheme.paddingInset,
+                mainAxisSpacing: AppTheme.paddingInset,
+              ),
+              cacheExtent: 400,
+              itemCount: products.length,
+              itemBuilder:
+                  (context, index) => ProductCard(product: products[index]),
+            );
       case 2:
         return const HistoryPage();
       case 3:
@@ -102,8 +101,9 @@ class _MainViewState extends State<MainView> {
           ),
           cacheExtent: 400,
           itemCount: iMat.selectProducts.length,
-          itemBuilder: (context, index) =>
-              ProductCard(product: iMat.selectProducts[index]),
+          itemBuilder:
+              (context, index) =>
+                  ProductCard(product: iMat.selectProducts[index]),
         );
     }
   }
@@ -137,8 +137,8 @@ class _MainViewState extends State<MainView> {
           ),
           Expanded(
             child: Selector<ImatDataHandler, int>(
-              selector: (_, h) =>
-                  Object.hash(_homeLayoutRevision(h), selectedIndex),
+              selector:
+                  (_, h) => Object.hash(_homeLayoutRevision(h), selectedIndex),
               builder: (context, _, __) {
                 final iMat = context.read<ImatDataHandler>();
                 return Row(
@@ -146,7 +146,9 @@ class _MainViewState extends State<MainView> {
                   children: [
                     if (selectedIndex == 0) CategorySidebar(iMat: iMat),
                     Expanded(child: _buildBody(iMat)),
-                    if (selectedIndex != 4)
+                    if (selectedIndex != 4 &&
+                        selectedIndex != 3 &&
+                        selectedIndex != 2)
                       CartSidebar(
                         onCheckout: () => setState(() => selectedIndex = 4),
                       ),
