@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
 import 'package:imat_app/model/imat/order.dart';
 import 'package:imat_app/model/imat/shopping_item.dart';
+import 'package:imat_app/shared/widgets/shoppingcart.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
@@ -11,49 +12,60 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dataHandler = context.watch<ImatDataHandler>();
-    final orders = dataHandler.orders;
+    final orders = [...dataHandler.orders]..sort((a, b) => b.date.compareTo(a.date));
 
     // VIKTIGT: Ingen Scaffold, ingen TopNavbar och ingen Column runt allt här.
     // Vi returnerar bara scroll-vyn eftersom MainView sköter resten.
-    return SingleChildScrollView(
-      child: Center(
-        child: Container(
-          width: 600,
-          margin: const EdgeInsets.symmetric(vertical: AppTheme.paddingInset),
-          padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingLarge),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Mina tidigare köp',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+    return Row(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Center(
+              child: Container(
+                width: 600,
+                margin: const EdgeInsets.symmetric(vertical: AppTheme.paddingInset),
+                padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingLarge),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Mina tidigare köp',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: AppTheme.paddingLarge),
+
+                    if (orders.isEmpty)
+                      const Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: AppTheme.paddingWide),
+                          child: Text('Du har inte gjort några köp än.'),
+                        ),
+                      )
+                    else
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: orders.length,
+                        itemBuilder: (context, index) {
+                          return _buildOrderCard(context, orders[index], dataHandler);
+                        },
+                      ),
+                  ],
                 ),
               ),
-              const SizedBox(height: AppTheme.paddingLarge),
-
-              if (orders.isEmpty)
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: AppTheme.paddingWide),
-                    child: Text('Du har inte gjort några köp än.'),
-                  ),
-                )
-              else
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: orders.length,
-                  itemBuilder: (context, index) {
-                    return _buildOrderCard(context, orders[index], dataHandler);
-                  },
-                ),
-            ],
+            ),
           ),
         ),
-      ),
+        CartSidebar(
+          onCheckout: () {
+            // Handle checkout action
+          },
+        ),
+      ],
     );
   }
 

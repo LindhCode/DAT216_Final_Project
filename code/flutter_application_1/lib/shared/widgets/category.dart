@@ -157,13 +157,23 @@ class _CategorySidebarState extends State<CategorySidebar> {
           AppTheme.paddingMedium,
           AppTheme.paddingMedium,
         ),
-        child: const Text(
-          'Kategorier',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textMain,
-          ),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.filter_list,
+              color: AppTheme.textMain,
+              size: 28,
+            ),
+            const SizedBox(width: AppTheme.paddingSmall),
+            const Text(
+              'Kategorier',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textMain,
+              ),
+            ),
+          ],
         ),
       ),
       Divider(
