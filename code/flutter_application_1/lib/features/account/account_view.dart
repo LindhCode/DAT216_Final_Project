@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:imat_app/core/theme/app_theme.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
 import 'package:provider/provider.dart';
+import '../checkout/checkout_widgets.dart';
 
 class AccountView extends StatefulWidget {
   const AccountView({super.key});
@@ -28,11 +29,22 @@ class _AccountViewState extends State<AccountView> {
 
     final iMat = context.read<ImatDataHandler>();
     final customer = iMat.getCustomer();
-
-    firstName = TextEditingController(text: customer.firstName);
-    lastName = TextEditingController(text: customer.lastName);
-    email = TextEditingController(text: customer.email);
-    phone = TextEditingController(text: customer.phoneNumber);
+    firstName = TextEditingController(
+      text: customer.firstName.isNotEmpty ? customer.firstName : 'Gjördis',
+    );
+    lastName = TextEditingController(
+      text: customer.lastName.isNotEmpty ? customer.lastName : 'Andersson',
+    );
+    email = TextEditingController(
+      text:
+          customer.email.isNotEmpty ? customer.email : 'gjördis@andersson.com',
+    );
+    phone = TextEditingController(
+      text:
+          customer.phoneNumber.isNotEmpty
+              ? customer.phoneNumber
+              : '078-233 78 44',
+    );
     mobile = TextEditingController(text: customer.mobilePhoneNumber);
     address = TextEditingController(text: customer.address);
     postCode = TextEditingController(text: customer.postCode);
@@ -64,13 +76,12 @@ class _AccountViewState extends State<AccountView> {
   Widget field(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingSmall),
-      child: TextField(
-        controller: controller,
-        enabled: isEditing,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FieldLabel(label),
+          CheckoutTextField(controller: controller, enabled: isEditing),
+        ],
       ),
     );
   }

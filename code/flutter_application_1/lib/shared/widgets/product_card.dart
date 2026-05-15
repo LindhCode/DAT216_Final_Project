@@ -79,13 +79,11 @@ class ProductCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 1. Image View - Hardcoded expanded space allocation
+                      // 1. Image View
                       Expanded(
                         child: Container(
                           width: double.infinity,
-                          height:
-                              double
-                                  .infinity, // Forces it to match the newly enlarged card space
+                          height: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.grey.withOpacity(0.03),
                             borderRadius: BorderRadius.circular(
@@ -97,9 +95,7 @@ class ProductCard extends StatelessWidget {
                               AppTheme.radiusMedium,
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(
-                                4.0,
-                              ), // Adds a clean inset frame around your image asset
+                              padding: const EdgeInsets.all(4.0),
                               child: _productImage(context, product),
                             ),
                           ),
@@ -111,7 +107,7 @@ class ProductCard extends StatelessWidget {
                       Text(
                         product.name,
                         style: const TextStyle(
-                          fontSize: 16, // Slightly larger base typography
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Color(0xFF1A1A1A),
                           letterSpacing: -0.2,
@@ -135,7 +131,7 @@ class ProductCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '/ ${product.unit}',
+                            product.unit,
                             style: TextStyle(
                               color: Colors.grey.shade500,
                               fontSize: 12,
@@ -231,7 +227,7 @@ class ProductCard extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppTheme.primaryGreen,
         foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: const StadiumBorder(),
         elevation: 0,
         padding: EdgeInsets.zero,
       ),
@@ -265,7 +261,7 @@ class ProductCard extends StatelessWidget {
       key: const ValueKey('qty_control'),
       decoration: BoxDecoration(
         color: AppTheme.primaryGreen.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(100),
         border: Border.all(
           color: AppTheme.primaryGreen.withOpacity(0.25),
           width: 1,
@@ -276,7 +272,7 @@ class ProductCard extends StatelessWidget {
         children: [
           _buildMicrosizedIconButton(
             icon: Icons.remove_rounded,
-            color: AppTheme.accentRed, // Permanently red minus button
+            color: AppTheme.accentRed,
             onPressed: () {
               if (item.amount > 1) {
                 iMat.shoppingCartAdd(ShoppingItem(product, amount: -1.0));
@@ -284,11 +280,13 @@ class ProductCard extends StatelessWidget {
                 iMat.shoppingCartRemove(item);
               }
             },
+            isLeftEdge: true,
           ),
           Text(
             '${item.amount.toInt()} st',
-            style: TextStyle(
-              color: AppTheme.primaryGreen.withAlpha(230),
+            style: const TextStyle(
+              // Changed from green to a dark charcoal/grey to look cleaner
+              color: Color(0xFF1A1A1A),
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
@@ -299,6 +297,7 @@ class ProductCard extends StatelessWidget {
             onPressed: () {
               iMat.shoppingCartAdd(ShoppingItem(product, amount: 1.0));
             },
+            isLeftEdge: false,
           ),
         ],
       ),
@@ -309,14 +308,20 @@ class ProductCard extends StatelessWidget {
     required IconData icon,
     required Color color,
     required VoidCallback onPressed,
+    required bool isLeftEdge,
   }) {
     return Material(
       type: MaterialType.transparency,
       child: InkWell(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(isLeftEdge ? 100 : 8),
+          bottomLeft: Radius.circular(isLeftEdge ? 100 : 8),
+          topRight: Radius.circular(!isLeftEdge ? 100 : 8),
+          bottomRight: Radius.circular(!isLeftEdge ? 100 : 8),
+        ),
         onTap: onPressed,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           child: Icon(icon, color: color, size: 20),
         ),
       ),
@@ -335,7 +340,6 @@ class ProductsBody extends StatelessWidget {
       return const Center(child: Text("Hittade inga produkter."));
     }
 
-    // Determine the column count dynamically based on the display size
     final screenWidth = MediaQuery.sizeOf(context).width;
     int crossAxisCount = 2;
     if (screenWidth > 900) {
@@ -347,11 +351,10 @@ class ProductsBody extends StatelessWidget {
     return GridView.builder(
       padding: const EdgeInsets.all(AppTheme.paddingMedium),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount, // Hardcoded layout grid configurations
+        crossAxisCount: crossAxisCount,
         mainAxisSpacing: AppTheme.paddingMedium,
         crossAxisSpacing: AppTheme.paddingMedium,
-        childAspectRatio:
-            0.85, // Balanced card height-to-width ratio to give maximum room to images
+        childAspectRatio: 0.85,
       ),
       itemCount: products.length,
       itemBuilder: (context, index) => ProductCard(product: products[index]),

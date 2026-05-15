@@ -74,10 +74,7 @@ const List<_CategoryGroup> _kGroups = [
     ProductCategory.FRUIT,
     ProductCategory.MELONS,
   ]),
-  _CategoryGroup('Kött', [
-    ProductCategory.MEAT,
-    ProductCategory.FISH,
-  ]),
+  _CategoryGroup('Kött', [ProductCategory.MEAT, ProductCategory.FISH]),
   _CategoryGroup('Kolhydrater', [
     ProductCategory.BREAD,
     ProductCategory.PASTA,
@@ -88,9 +85,7 @@ const List<_CategoryGroup> _kGroups = [
     ProductCategory.HOT_DRINKS,
     ProductCategory.COLD_DRINKS,
   ]),
-  _CategoryGroup('Mejeri', [
-    ProductCategory.DAIRIES,
-  ]),
+  _CategoryGroup('Mejeri', [ProductCategory.DAIRIES]),
   _CategoryGroup('Övrigt', [
     ProductCategory.POD,
     ProductCategory.NUTS_AND_SEEDS,
@@ -146,7 +141,6 @@ class _CategorySidebarState extends State<CategorySidebar> {
   void _onPickCategory(ProductCategory cat) {
     final iMat = widget.iMat;
     final label = _categoryLabelSv(cat);
-    // setSelectedCategory sätter redan _isShowingFavorites = false
     iMat.setSelectedCategory(label);
     iMat.selectSelection(iMat.findProductsByCategory(cat));
   }
@@ -161,7 +155,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
           AppTheme.paddingMedium,
           AppTheme.paddingLarge,
           AppTheme.paddingMedium,
-          AppTheme.paddingMediumSmall,
+          AppTheme.paddingMedium,
         ),
         child: const Text(
           'Kategorier',
@@ -181,9 +175,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
 
     for (final group in _kGroups) {
       final present =
-          group.categories
-              .where((c) => _categoryHasProducts(iMat, c))
-              .toList();
+          group.categories.where((c) => _categoryHasProducts(iMat, c)).toList();
       if (present.isEmpty) continue;
       listChildren.add(_buildGroupColumn(context, iMat, group, present));
       listChildren.add(
@@ -206,10 +198,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: listChildren,
-              ),
+              child: ListView(padding: EdgeInsets.zero, children: listChildren),
             ),
           ],
         ),
@@ -233,8 +222,8 @@ class _CategorySidebarState extends State<CategorySidebar> {
           onTap: () => _toggleGroup(group.title),
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: AppTheme.paddingSmall,
-              vertical: AppTheme.paddingSmall,
+              horizontal: AppTheme.paddingMedium,
+              vertical: AppTheme.paddingMediumSmall,
             ),
             child: Row(
               children: [
@@ -245,7 +234,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
                   color: AppTheme.textMain,
                   size: AppTheme.paddingLarge,
                 ),
-                SizedBox(width: AppTheme.paddingTiny),
+                const SizedBox(width: AppTheme.paddingSmall),
                 Expanded(
                   child: Text(
                     group.title,
@@ -281,10 +270,11 @@ class _CategorySidebarState extends State<CategorySidebar> {
       onTap: () => _onPickCategory(cat),
       child: Padding(
         padding: const EdgeInsets.only(
-          left: AppTheme.paddingWide,
-          right: AppTheme.paddingSmall,
-          top: AppTheme.paddingTiny,
-          bottom: AppTheme.paddingTiny,
+          // Justerat för att linjera snyggt under texten i huvudgruppen (Icon 24px + Spacing 8px)
+          left: AppTheme.paddingLarge + AppTheme.paddingSmall,
+          right: AppTheme.paddingMedium,
+          top: AppTheme.paddingSmall,
+          bottom: AppTheme.paddingSmall,
         ),
         child: Align(
           alignment: Alignment.centerLeft,

@@ -103,6 +103,7 @@ class CheckoutTextField extends StatelessWidget {
   final String? hint;
   final TextInputType? keyboardType;
   final double? width;
+  final bool enabled;
 
   const CheckoutTextField({
     super.key,
@@ -110,6 +111,7 @@ class CheckoutTextField extends StatelessWidget {
     this.hint,
     this.keyboardType,
     this.width,
+    this.enabled = true,
   });
 
   @override
@@ -119,6 +121,8 @@ class CheckoutTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
+        cursorColor: Colors.black,
+        enabled: enabled,
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(
@@ -139,8 +143,8 @@ class CheckoutTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-            borderSide: const BorderSide(
-              color: CheckoutTheme.green,
+            borderSide: BorderSide(
+              color: Colors.grey[700]!,
               width: 1.5,
             ),
           ),

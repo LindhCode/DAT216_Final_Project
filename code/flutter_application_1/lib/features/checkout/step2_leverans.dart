@@ -189,18 +189,13 @@ class _Step2LeveransState extends State<Step2Leverans> {
                             vertical: 14,
                           ),
                           decoration: BoxDecoration(
-                            color:
-                                selectedDate != null
-                                    ? Theme.of(
-                                      context,
-                                    ).primaryColor.withAlpha(13)
-                                    : Colors.grey[50],
+                            color: Colors.grey[50],
                             border: Border.all(
                               color:
                                   selectedDate != null
-                                      ? Theme.of(context).primaryColor
+                                      ? Colors.grey[700]!
                                       : CheckoutTheme.border,
-                              width: selectedDate != null ? 1.5 : 1.0,
+                              width: selectedDate != null ? 2.0 : 1.0,
                             ),
                             borderRadius: BorderRadius.circular(
                               AppTheme.radiusMedium,
@@ -230,7 +225,7 @@ class _Step2LeveransState extends State<Step2Leverans> {
                                 size: 20,
                                 color:
                                     selectedDate != null
-                                        ? Theme.of(context).primaryColor
+                                        ? Colors.grey[700]!
                                         : Colors.grey[500],
                               ),
                             ],
