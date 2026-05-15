@@ -106,6 +106,18 @@ bool _isLeafActive(ImatDataHandler iMat, ProductCategory cat) {
   return inCategory.every((p) => ids.contains(p.productId));
 }
 
+/// Finds the group name for a given category label (Swedish).
+String? getGroupForCategory(String categoryLabel) {
+  for (final group in _kGroups) {
+    for (final cat in group.categories) {
+      if (_categoryLabelSv(cat) == categoryLabel) {
+        return group.title;
+      }
+    }
+  }
+  return null;
+}
+
 class CategorySidebar extends StatefulWidget {
   final ImatDataHandler iMat;
 

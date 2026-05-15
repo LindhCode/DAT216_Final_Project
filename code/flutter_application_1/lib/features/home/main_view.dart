@@ -67,18 +67,41 @@ class _MainViewState extends State<MainView> {
                 style: TextStyle(fontSize: 18),
               ),
             )
-            : GridView.builder(
-              padding: const EdgeInsets.all(AppTheme.paddingLarge),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 0.75,
-                crossAxisSpacing: AppTheme.paddingInset,
-                mainAxisSpacing: AppTheme.paddingInset,
-              ),
-              cacheExtent: 400,
-              itemCount: products.length,
-              itemBuilder:
-                  (context, index) => ProductCard(product: products[index]),
+            : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppTheme.paddingLarge,
+                    vertical: AppTheme.paddingLarge,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Du letar bland: Favoriter',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textMain,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(AppTheme.paddingLarge),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: 0.75,
+                      crossAxisSpacing: AppTheme.paddingInset,
+                      mainAxisSpacing: AppTheme.paddingInset,
+                    ),
+                    cacheExtent: 400,
+                    itemCount: products.length,
+                    itemBuilder:
+                        (context, index) => ProductCard(product: products[index]),
+                  ),
+                ),
+              ],
             );
       case 2:
         return const HistoryPage();
@@ -91,21 +114,109 @@ class _MainViewState extends State<MainView> {
           },
         );
       default:
-        return GridView.builder(
-          padding: const EdgeInsets.all(AppTheme.paddingLarge),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: AppTheme.paddingInset,
-            mainAxisSpacing: AppTheme.paddingInset,
-          ),
-          cacheExtent: 400,
-          itemCount: iMat.selectProducts.length,
-          itemBuilder:
-              (context, index) =>
-                  ProductCard(product: iMat.selectProducts[index]),
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppTheme.paddingLarge,
+                vertical: 8.0,
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    'Du letar bland:',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Expanded(child: _buildBreadcrumbs(iMat.selectedCategory)),
+                ],
+              ),
+            ),
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.all(AppTheme.paddingLarge),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: AppTheme.paddingInset,
+                  mainAxisSpacing: AppTheme.paddingInset,
+                ),
+                cacheExtent: 400,
+                itemCount: iMat.selectProducts.length,
+                itemBuilder:
+                    (context, index) =>
+                        ProductCard(product: iMat.selectProducts[index]),
+              ),
+            ),
+          ],
         );
     }
+  }
+
+  String _buildBreadcrumbText(String selectedCategory) {
+    if (selectedCategory.isEmpty) {
+      return 'Du letar bland alla varor';
+    }
+    final group = getGroupForCategory(selectedCategory);
+    if (group != null) {
+      return 'Du letar bland: $group > $selectedCategory';
+    }
+    return 'Du letar bland: $selectedCategory';
+  }
+
+  Widget _buildBreadcrumbs(String selectedCategory) {
+    if (selectedCategory.isEmpty) {
+      return const Text(
+        'Alla varor',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          color: AppTheme.textMain,
+        ),
+      );
+    }
+    final group = getGroupForCategory(selectedCategory);
+    if (group != null) {
+      return Row(
+        children: [
+          Text(
+            group,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textMain,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Icon(
+              Icons.chevron_right,
+              color: AppTheme.textMain,
+            ),
+          ),
+          Text(
+            selectedCategory,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textMain,
+            ),
+          ),
+        ],
+      );
+    }
+    return Text(
+      selectedCategory,
+      style: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+        color: AppTheme.textMain,
+      ),
+    );
   }
 
   @override
