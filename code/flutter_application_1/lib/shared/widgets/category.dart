@@ -118,6 +118,24 @@ String? getGroupForCategory(String categoryLabel) {
   return null;
 }
 
+ProductCategory? getCategoryByLabel(String label) {
+  for (final category in ProductCategory.values) {
+    if (_categoryLabelSv(category) == label) {
+      return category;
+    }
+  }
+  return null;
+}
+
+List<ProductCategory>? getGroupCategories(String groupTitle) {
+  for (final group in _kGroups) {
+    if (group.title == groupTitle) {
+      return group.categories;
+    }
+  }
+  return null;
+}
+
 class CategorySidebar extends StatefulWidget {
   final ImatDataHandler iMat;
 

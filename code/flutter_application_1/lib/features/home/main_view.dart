@@ -115,24 +115,26 @@ class _MainViewState extends State<MainView> {
         );
       default:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppTheme.paddingLarge,
                 vertical: 8.0,
               ),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Du letar bland:',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
+                  const Text(
+                    'Du letar bland',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
                       color: Colors.grey,
                     ),
                   ),
-                  const SizedBox(width: 8.0),
-                  Expanded(child: _buildBreadcrumbs(iMat.selectedCategory)),
+                  const SizedBox(height: AppTheme.paddingTiny),
+                  _buildBreadcrumbs(context, iMat.selectedCategory),
                 ],
               ),
             ),
@@ -157,65 +159,98 @@ class _MainViewState extends State<MainView> {
     }
   }
 
-  String _buildBreadcrumbText(String selectedCategory) {
-    if (selectedCategory.isEmpty) {
-      return 'Du letar bland alla varor';
-    }
-    final group = getGroupForCategory(selectedCategory);
-    if (group != null) {
-      return 'Du letar bland: $group > $selectedCategory';
-    }
-    return 'Du letar bland: $selectedCategory';
+  Widget _buildBreadcrumbText(
+    String text, {
+    bool selected = false,
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: selected ? 24 : 24,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            color: AppTheme.textMain,
+          ),
+        ),
+      ),
+    );
   }
 
-  Widget _buildBreadcrumbs(String selectedCategory) {
+  Widget _buildBreadcrumbs(BuildContext context, String selectedCategory) {
+    final iMat = context.read<ImatDataHandler>();
+
     if (selectedCategory.isEmpty) {
-      return const Text(
+      return Text(
         'Alla varor',
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 24,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: AppTheme.textMain,
         ),
       );
     }
+
     final group = getGroupForCategory(selectedCategory);
-    if (group != null) {
-      return Row(
-        children: [
-          Text(
-            group,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textMain,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Icon(
-              Icons.chevron_right,
-              color: AppTheme.textMain,
-            ),
-          ),
-          Text(
-            selectedCategory,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textMain,
-            ),
-          ),
-        ],
+    final category = getCategoryByLabel(selectedCategory);
+
+    if (group == null) {
+      return Text(
+        selectedCategory,
+        style: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          color: AppTheme.textMain,
+        ),
       );
     }
-    return Text(
-      selectedCategory,
-      style: const TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.w600,
-        color: AppTheme.textMain,
-      ),
+
+    return Row(
+      children: [
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () {
+              final categories = getGroupCategories(group);
+              if (categories == null) return;
+              final products = categories
+                  .expand((cat) => iMat.findProductsByCategory(cat))
+                  .toList();
+              iMat.setShowingFavorites(false);
+              iMat.selectSelection(products);
+              iMat.setSelectedCategory(group);
+            },
+            child: Text(
+              group,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+                color: AppTheme.textMain,
+              ),
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: Icon(
+            Icons.chevron_right,
+            size: 24,
+            color: Colors.grey,
+          ),
+        ),
+        Text(
+          selectedCategory,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            color: AppTheme.textMain,
+          ),
+        ),
+      ],
     );
   }
 
