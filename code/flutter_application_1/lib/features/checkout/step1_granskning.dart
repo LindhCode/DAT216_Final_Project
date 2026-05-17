@@ -7,8 +7,53 @@ import 'checkout_widgets.dart';
 class Step1Granskning extends StatelessWidget {
   final ImatDataHandler iMat;
   final VoidCallback onNext;
+  final VoidCallback onBack;
 
-  const Step1Granskning({super.key, required this.iMat, required this.onNext});
+  const Step1Granskning({
+    super.key,
+    required this.iMat,
+    required this.onNext,
+    required this.onBack,
+  });
+
+  String _quantityLabel(item) {
+    final amount = item.amount;
+    final rawUnit = item.product.unit.trim();
+    final unit = rawUnit.toLowerCase();
+
+    String amountText() {
+      return amount.truncateToDouble() == amount
+          ? amount.toInt().toString()
+          : amount.toStringAsFixed(2);
+    }
+
+    String quantityUnit() {
+      if (unit.startsWith('kr/')) {
+        return rawUnit.split('/').last;
+      }
+      if (unit.contains('/')) {
+        final parts = rawUnit.split('/');
+        if (parts.length == 2 && parts.first.toLowerCase().contains('kr')) {
+          return parts.last;
+        }
+      }
+      if (unit.contains('kg')) {
+        return 'kg';
+      }
+      if (unit.contains('st')) {
+        return 'st';
+      }
+      if (unit.contains('förp')) {
+        return 'förp';
+      }
+      return rawUnit;
+    }
+
+    final unitLabel = quantityUnit();
+    final amountLabel = amountText();
+
+    return unitLabel.isEmpty ? amountLabel : '$amountLabel $unitLabel';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,15 +105,33 @@ class Step1Granskning extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${item.amount.toInt()} ${item.product.unit}',
+                            _quantityLabel(item),
                             style: const TextStyle(
                               color: CheckoutTheme.textMuted,
                             ),
                           ),
-                          const SizedBox(width: 24),
+                          const SizedBox(width: 16),
                           Text(
                             '${item.total.toStringAsFixed(2)} kr',
                             style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 24),
+                          ElevatedButton.icon(
+                            onPressed: () => iMat.shoppingCartRemove(item),
+                            icon: const Icon(Icons.delete_outline, size: 18),
+                            label: const Text('Tag bort'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: CheckoutTheme.red,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppTheme.paddingSmall,
+                                vertical: AppTheme.paddingTiny,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(AppTheme.radiusRound),
+                              ),
+                              elevation: 0,
+                            ),
                           ),
                         ],
                       ),
@@ -102,28 +165,35 @@ class Step1Granskning extends StatelessWidget {
           ),
 
           const SizedBox(height: AppTheme.paddingMedium),
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              onPressed: cart.items.isEmpty ? null : onNext,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CheckoutTheme.green,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor: Colors.grey[300],
-                disabledForegroundColor: Colors.grey[600],
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppTheme.paddingLarge,
-                  vertical: AppTheme.paddingMedium,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              NavButton(
+                label: '< Tillbaka',
+                onPressed: onBack,
+                outlined: true,
+              ),
+              ElevatedButton(
+                onPressed: cart.items.isEmpty ? null : onNext,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CheckoutTheme.green,
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: Colors.grey[300],
+                  disabledForegroundColor: Colors.grey[600],
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppTheme.paddingLarge,
+                    vertical: AppTheme.paddingMedium,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(999),
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(999),
+                child: const Text(
+                  'Till Leverans >',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-              child: const Text(
-                'Till Leverans >',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
+            ],
           ),
         ],
       ),

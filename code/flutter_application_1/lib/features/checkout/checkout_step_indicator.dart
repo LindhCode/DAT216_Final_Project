@@ -3,6 +3,7 @@ import 'package:imat_app/core/theme/app_theme.dart';
 
 class CheckoutStepIndicator extends StatelessWidget {
   final int currentStep; // 0–3
+  final ValueChanged<int>? onStepTap;
 
   static const _labels = [
     '1. Granskning',
@@ -11,7 +12,11 @@ class CheckoutStepIndicator extends StatelessWidget {
     '4. Slutför',
   ];
 
-  const CheckoutStepIndicator({super.key, required this.currentStep});
+  const CheckoutStepIndicator({
+    super.key,
+    required this.currentStep,
+    this.onStepTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,35 +36,39 @@ class CheckoutStepIndicator extends StatelessWidget {
             children: List.generate(_labels.length, (index) {
               final bool isDoneOrActive = index <= currentStep;
 
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CustomPaint(
-                    // Mycket bredare (160), men behåller slimmad höjd (14)
-                    size: const Size(160, 14),
-                    painter: _ChevronPainter(
-                      color:
-                          isDoneOrActive
+              final bool isClickable = index <= currentStep && onStepTap != null;
+              return GestureDetector(
+                onTap: isClickable ? () => onStepTap!(index) : null,
+                child: MouseRegion(
+                  cursor: isClickable ? SystemMouseCursors.click : SystemMouseCursors.basic,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomPaint(
+                        // Mycket bredare (160), men behåller slimmad höjd (14)
+                        size: const Size(160, 14),
+                        painter: _ChevronPainter(
+                          color: isDoneOrActive
                               ? const Color(0xFF4C8C4A)
                               : const Color(0xFFE0E0E0),
-                      isFirst: index == 0,
-                      isLast: index == _labels.length - 1,
-                    ),
-                  ),
-                  const SizedBox(height: AppTheme.paddingCompact),
-                  Text(
-                    _labels[index],
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight:
-                          index == currentStep
+                          isFirst: index == 0,
+                          isLast: index == _labels.length - 1,
+                        ),
+                      ),
+                      const SizedBox(height: AppTheme.paddingCompact),
+                      Text(
+                        _labels[index],
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: index == currentStep
                               ? FontWeight.bold
                               : FontWeight.w500,
-                      color:
-                          index <= currentStep ? Colors.black : Colors.black45,
-                    ),
+                          color: index <= currentStep ? Colors.black : Colors.black45,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               );
             }),
           ),

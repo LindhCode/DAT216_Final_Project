@@ -74,7 +74,14 @@ class _CheckoutViewState extends State<CheckoutView> {
       backgroundColor: CheckoutTheme.bg,
       body: Column(
         children: [
-          step_indicator.CheckoutStepIndicator(currentStep: _currentStep),
+          step_indicator.CheckoutStepIndicator(
+            currentStep: _currentStep,
+            onStepTap: (index) {
+              if (index <= _currentStep) {
+                setState(() => _currentStep = index);
+              }
+            },
+          ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(
@@ -97,6 +104,7 @@ class _CheckoutViewState extends State<CheckoutView> {
         return Step1Granskning(
           iMat: iMat,
           onNext: _nextStep,
+          onBack: () => widget.onNavigateToHistory(0),
         );
       case 1:
         return Step2Leverans(

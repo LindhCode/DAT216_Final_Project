@@ -16,6 +16,47 @@ class CartSidebar extends StatelessWidget {
     return '${h.getShoppingCart().items.length}|$b|${h.shoppingCartTotal().toStringAsFixed(2)}';
   }
 
+  Future<void> _confirmClearCart(BuildContext context, ImatDataHandler iMat) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppTheme.cardBackground,
+          title: const Text('Töm varukorgen'),
+          content: const Text('Är du säker på att du vill tömma varukorgen?'),
+          actions: [
+            OutlinedButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppTheme.textSecondary),
+                backgroundColor: AppTheme.cardBackground,
+                foregroundColor: AppTheme.textMain,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppTheme.radiusRound),
+                ),
+              ),
+              child: const Text('Avbryt'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.accentRed,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppTheme.radiusRound),
+                ),
+              ),
+              child: const Text('Ja, jag är säker'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      iMat.shoppingCartClear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Selector<ImatDataHandler, String>(
@@ -196,8 +237,9 @@ class CartSidebar extends StatelessWidget {
                     ),
                     const SizedBox(height: AppTheme.paddingSmall),
                     ElevatedButton(
-                      onPressed:
-                          items.isEmpty ? null : () => iMat.shoppingCartClear(),
+                      onPressed: items.isEmpty
+                          ? null
+                          : () => _confirmClearCart(context, iMat),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.accentRed,
                         minimumSize: const Size(

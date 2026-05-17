@@ -172,7 +172,7 @@ class HistoryPage extends StatelessWidget {
                 ),
                 icon: const Icon(Icons.refresh, color: Colors.white),
                 label: const Text(
-                  'Köp igen',
+                  'Lägg i varukorg',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
