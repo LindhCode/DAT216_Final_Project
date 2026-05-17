@@ -91,13 +91,13 @@ class Step1Granskning extends StatelessWidget {
                 ),
                 const SizedBox(height: AppTheme.paddingMedium),
 
-                // Header row to clarify columns: Produkt | Antal | Pris
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingSmall),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppTheme.paddingSmall,
+                  ),
                   child: Row(
                     children: const [
-                      Flexible(
-                        flex: 3,
+                      Expanded(
                         child: Text(
                           'Produkt',
                           style: TextStyle(
@@ -107,32 +107,31 @@ class Step1Granskning extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Flexible(
-                        flex: 2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Antal',
-                              style: TextStyle(
-                                fontSize: AppTheme.fontSizeSubtitle,
-                                fontWeight: FontWeight.w600,
-                                color: CheckoutTheme.textMuted,
-                              ),
-                            ),
-                            SizedBox(width: AppTheme.paddingMedium),
-                            Text(
-                              'Pris',
-                              style: TextStyle(
-                                fontSize: AppTheme.fontSizeSubtitle,
-                                fontWeight: FontWeight.w600,
-                                color: CheckoutTheme.textMuted,
-                              ),
-                            ),
-                          ],
+                      SizedBox(
+                        width: AppTheme.checkoutQuantityColumnWidth,
+                        child: Text(
+                          'Antal',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontSize: AppTheme.fontSizeSubtitle,
+                            fontWeight: FontWeight.w600,
+                            color: CheckoutTheme.textMuted,
+                          ),
                         ),
                       ),
-                      SizedBox(width: AppTheme.paddingLarge),
+                      SizedBox(
+                        width: AppTheme.checkoutPriceColumnWidth,
+                        child: Text(
+                          'Pris',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontSize: AppTheme.fontSizeSubtitle,
+                            fontWeight: FontWeight.w600,
+                            color: CheckoutTheme.textMuted,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: AppTheme.checkoutActionColumnWidth),
                     ],
                   ),
                 ),
@@ -158,38 +157,49 @@ class Step1Granskning extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Text(
-                            _quantityLabel(item),
-                            style: const TextStyle(
-                              color: CheckoutTheme.textMuted,
-                            ),
-                          ),
-                          const SizedBox(width: AppTheme.paddingMedium),
-                          Text(
-                            '${item.total.toStringAsFixed(2)} kr',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(width: AppTheme.paddingLarge),
-                          ElevatedButton.icon(
-                            onPressed: () => iMat.shoppingCartRemove(item),
-                            icon: const Icon(
-                              Icons.delete_outline,
-                              size: AppTheme.iconSizeMedium,
-                            ),
-                            label: const Text('Tag bort'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: CheckoutTheme.red,
-                              foregroundColor: AppTheme.colorWhite,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppTheme.paddingSmall,
-                                vertical: AppTheme.paddingTiny,
+                          SizedBox(
+                            width: AppTheme.checkoutQuantityColumnWidth,
+                            child: Text(
+                              _quantityLabel(item),
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(
+                                color: CheckoutTheme.textMuted,
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  AppTheme.radiusRound,
+                            ),
+                          ),
+                          SizedBox(
+                            width: AppTheme.checkoutPriceColumnWidth,
+                            child: Text(
+                              '${item.total.toStringAsFixed(2)} kr',
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: AppTheme.checkoutActionColumnWidth,
+                            child: ElevatedButton.icon(
+                              onPressed: () => iMat.shoppingCartRemove(item),
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                size: AppTheme.iconSizeMedium,
+                              ),
+                              label: const Text('Tag bort'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: CheckoutTheme.red,
+                                foregroundColor: AppTheme.colorWhite,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: AppTheme.paddingSmall,
+                                  vertical: AppTheme.paddingTiny,
                                 ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusRound,
+                                  ),
+                                ),
+                                elevation: AppTheme.elevationNone,
                               ),
-                              elevation: AppTheme.elevationNone,
                             ),
                           ),
                         ],

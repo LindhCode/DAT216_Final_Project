@@ -73,6 +73,9 @@ class AppTheme {
   static const double contentWidthNarrow = 600.0;
   static const double contentWidthCheckout = 700.0;
   static const double contentWidthPayment = 650.0;
+  static const double checkoutQuantityColumnWidth = 80.0;
+  static const double checkoutPriceColumnWidth = 96.0;
+  static const double checkoutActionColumnWidth = 120.0;
   static const double modalMaxWidth = 560.0;
   static const double modalImageHeight = 260.0;
   static const double checkoutLogoSize = 36.0;
