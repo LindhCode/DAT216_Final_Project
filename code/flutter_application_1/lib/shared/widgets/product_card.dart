@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:imat_app/core/theme/app_theme.dart';
 import 'package:imat_app/model/internet_handler.dart';
 import 'package:imat_app/model/imat/product.dart';
-import 'package:imat_app/model/imat/shopping_item.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
+import 'package:imat_app/shared/country_flag.dart';
+import 'package:imat_app/shared/widgets/product_add_to_cart_button.dart';
+import 'package:imat_app/shared/widgets/product_detail_modal.dart';
 import 'package:provider/provider.dart';
 
 /// Produktbild via nätverket
 Widget _productImage(BuildContext context, Product product) {
   final dpr = MediaQuery.devicePixelRatioOf(context);
   final widthPx = (MediaQuery.sizeOf(context).width * dpr / 4).round().clamp(
-    180,
-    640,
+    AppTheme.imageCacheWidthMin,
+    AppTheme.imageCacheWidthMax,
   );
 
   return Image.network(
@@ -42,156 +44,147 @@ class ProductCard extends StatelessWidget {
       child: Consumer<ImatDataHandler>(
         builder: (context, iMat, __) {
           final isFav = iMat.isFavorite(product);
-          final cartItems = iMat.getShoppingCart().items;
-
-          ShoppingItem? currentItem;
-          for (var item in cartItems) {
-            if (item.product.productId == product.productId) {
-              currentItem = item;
-              break;
-            }
-          }
-
-          final bool inCart = currentItem != null;
+          final detail = iMat.getDetail(product);
 
           return Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.cardBackground,
               borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
+                  color: AppTheme.shadowBlack03,
+                  blurRadius: AppTheme.shadowBlurMedium,
+                  offset: AppTheme.shadowOffsetMedium,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.02),
-                  blurRadius: 2,
-                  offset: const Offset(0, 1),
+                  color: AppTheme.shadowBlack02,
+                  blurRadius: AppTheme.shadowBlurTiny,
+                  offset: AppTheme.shadowOffsetSmall,
                 ),
               ],
             ),
             child: Stack(
               children: [
-                // Main Content Column
                 Padding(
                   padding: const EdgeInsets.all(AppTheme.paddingMediumSmall),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 1. Image View
                       Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.03),
-                            borderRadius: BorderRadius.circular(
-                              AppTheme.radiusMedium,
-                            ),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                              AppTheme.radiusMedium,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: _productImage(context, product),
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap:
+                                () => showProductDetailModal(context, product),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.cardBackground,
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusMedium,
+                                      ),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusMedium,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(
+                                          AppTheme.paddingTiny,
+                                        ),
+                                        child: _productImage(context, product),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: AppTheme.paddingCompact),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      countryFlagForOrigin(
+                                        detail?.origin ?? '',
+                                      ),
+                                      style: const TextStyle(
+                                        fontSize: AppTheme.fontSizeSubtitle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: AppTheme.paddingSmall),
+                                    Expanded(
+                                      child: Text(
+                                        product.name,
+                                        style: const TextStyle(
+                                          fontSize: AppTheme.fontSizeSubtitle,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppTheme.textCharcoal,
+                                          letterSpacing: AppTheme.letterSpacingTight,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: AppTheme.paddingTiny),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${product.price.toStringAsFixed(2)} kr',
+                                      style: const TextStyle(
+                                        fontSize: AppTheme.fontSizePrice,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppTheme.textCharcoal,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: AppTheme.paddingMicro,
+                                    ),
+                                    Text(
+                                      product.unit,
+                                      style: const TextStyle(
+                                        color: AppTheme.grey500,
+                                        fontSize: AppTheme.fontSizeCaption,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-
-                      // 2. Product Name
-                      Text(
-                        product.name,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1A1A1A),
-                          letterSpacing: -0.2,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-
-                      // 3. Price & Unit Section
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${product.price.toStringAsFixed(2)} kr',
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1A1A1A),
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            product.unit,
-                            style: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-
-                      // 4. Interactive Action Button Row
-                      SizedBox(
-                        width: double.infinity,
-                        height: 42,
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          transitionBuilder: (
-                            Widget child,
-                            Animation<double> animation,
-                          ) {
-                            return FadeTransition(
-                              opacity: animation,
-                              child: ScaleTransition(
-                                scale: animation,
-                                child: child,
-                              ),
-                            );
-                          },
-                          child:
-                              inCart
-                                  ? _buildQuantityControl(
-                                    iMat,
-                                    currentItem,
-                                    context,
-                                  )
-                                  : _buildAddButton(iMat),
-                        ),
-                      ),
+                      const SizedBox(height: AppTheme.paddingMediumSmall),
+                      ProductAddToCartButton(product: product),
                     ],
                   ),
                 ),
-
-                // Floating Favorite Button (Top Right corner overlay)
                 Positioned(
-                  top: 8,
-                  right: 8,
+                  top: AppTheme.paddingSmall,
+                  right: AppTheme.paddingSmall,
                   child: Material(
                     type: MaterialType.transparency,
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(32),
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.radiusFavorite,
+                      ),
                       onTap: () => iMat.toggleFavorite(product),
                       child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.9),
+                        padding: const EdgeInsets.all(AppTheme.paddingXSmall),
+                        decoration: const BoxDecoration(
+                          color: AppTheme.favoriteButtonSurface,
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 4,
+                              color: AppTheme.shadowBlack05,
+                              blurRadius: AppTheme.shadowBlurSmall,
                             ),
                           ],
                         ),
@@ -202,11 +195,11 @@ class ProductCard extends StatelessWidget {
                                 ? Icons.favorite
                                 : Icons.favorite_border_rounded,
                             key: ValueKey<bool>(isFav),
-                            size: 20,
+                            size: AppTheme.iconSizeStandard,
                             color:
                                 isFav
                                     ? AppTheme.accentRed
-                                    : Colors.grey.shade400,
+                                    : AppTheme.grey400,
                           ),
                         ),
                       ),
@@ -217,113 +210,6 @@ class ProductCard extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildAddButton(ImatDataHandler iMat) {
-    return ElevatedButton(
-      key: const ValueKey('add_btn'),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.primaryGreen,
-        foregroundColor: Colors.white,
-        shape: const StadiumBorder(),
-        elevation: 0,
-        padding: EdgeInsets.zero,
-      ),
-      onPressed: () {
-        iMat.shoppingCartAdd(ShoppingItem(product, amount: 1.0));
-      },
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.add_rounded, size: 20),
-          SizedBox(width: 4),
-          Text(
-            'Köp',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              letterSpacing: 0.2,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuantityControl(
-    ImatDataHandler iMat,
-    ShoppingItem item,
-    BuildContext context,
-  ) {
-    return Container(
-      key: const ValueKey('qty_control'),
-      decoration: BoxDecoration(
-        color: AppTheme.primaryGreen.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(
-          color: AppTheme.primaryGreen.withOpacity(0.25),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildMicrosizedIconButton(
-            icon: Icons.remove_rounded,
-            color: AppTheme.accentRed,
-            onPressed: () {
-              if (item.amount > 1) {
-                iMat.shoppingCartAdd(ShoppingItem(product, amount: -1.0));
-              } else {
-                iMat.shoppingCartRemove(item);
-              }
-            },
-            isLeftEdge: true,
-          ),
-          Text(
-            '${item.amount.toInt()} st',
-            style: const TextStyle(
-              // Changed from green to a dark charcoal/grey to look cleaner
-              color: Color(0xFF1A1A1A),
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-          _buildMicrosizedIconButton(
-            icon: Icons.add_rounded,
-            color: AppTheme.primaryGreen,
-            onPressed: () {
-              iMat.shoppingCartAdd(ShoppingItem(product, amount: 1.0));
-            },
-            isLeftEdge: false,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMicrosizedIconButton({
-    required IconData icon,
-    required Color color,
-    required VoidCallback onPressed,
-    required bool isLeftEdge,
-  }) {
-    return Material(
-      type: MaterialType.transparency,
-      child: InkWell(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(isLeftEdge ? 100 : 8),
-          bottomLeft: Radius.circular(isLeftEdge ? 100 : 8),
-          topRight: Radius.circular(!isLeftEdge ? 100 : 8),
-          bottomRight: Radius.circular(!isLeftEdge ? 100 : 8),
-        ),
-        onTap: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          child: Icon(icon, color: color, size: 20),
-        ),
       ),
     );
   }
@@ -354,7 +240,7 @@ class ProductsBody extends StatelessWidget {
         crossAxisCount: crossAxisCount,
         mainAxisSpacing: AppTheme.paddingMedium,
         crossAxisSpacing: AppTheme.paddingMedium,
-        childAspectRatio: 0.85,
+        childAspectRatio: AppTheme.gridAspectRatioCard,
       ),
       itemCount: products.length,
       itemBuilder: (context, index) => ProductCard(product: products[index]),

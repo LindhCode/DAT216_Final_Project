@@ -64,7 +64,7 @@ class _MainViewState extends State<MainView> {
             ? const Center(
               child: Text(
                 "Inga favoriter hittades.",
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: AppTheme.fontSizeTitle),
               ),
             )
             : Column(
@@ -79,7 +79,7 @@ class _MainViewState extends State<MainView> {
                     child: Text(
                       'Du letar bland: Favoriter',
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: AppTheme.fontSizeHeadingSmall,
                         fontWeight: FontWeight.w600,
                         color: AppTheme.textMain,
                       ),
@@ -91,7 +91,7 @@ class _MainViewState extends State<MainView> {
                     padding: const EdgeInsets.all(AppTheme.paddingLarge),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
-                      childAspectRatio: 0.75,
+                      childAspectRatio: AppTheme.gridAspectRatioHome,
                       crossAxisSpacing: AppTheme.paddingInset,
                       mainAxisSpacing: AppTheme.paddingInset,
                     ),
@@ -120,7 +120,7 @@ class _MainViewState extends State<MainView> {
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppTheme.paddingLarge,
-                vertical: 8.0,
+                vertical: AppTheme.paddingSmall,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,9 +128,9 @@ class _MainViewState extends State<MainView> {
                   const Text(
                     'Du letar bland',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: AppTheme.fontSizeSmall,
                       fontWeight: FontWeight.w500,
-                      color: Colors.grey,
+                      color: AppTheme.grey500,
                     ),
                   ),
                   const SizedBox(height: AppTheme.paddingTiny),
@@ -166,13 +166,16 @@ class _MainViewState extends State<MainView> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(4),
+      borderRadius: BorderRadius.circular(AppTheme.radiusTight),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+        padding: const EdgeInsets.symmetric(
+          vertical: AppTheme.paddingMicro,
+          horizontal: AppTheme.paddingMicro,
+        ),
         child: Text(
           text,
           style: TextStyle(
-            fontSize: selected ? 24 : 24,
+            fontSize: AppTheme.fontSizeHeadingLarge,
             fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
             color: AppTheme.textMain,
           ),
@@ -188,7 +191,7 @@ class _MainViewState extends State<MainView> {
       return Text(
         'Alla varor',
         style: const TextStyle(
-          fontSize: 24,
+          fontSize: AppTheme.fontSizeHeadingLarge,
           fontWeight: FontWeight.w700,
           color: AppTheme.textMain,
         ),
@@ -202,7 +205,7 @@ class _MainViewState extends State<MainView> {
       return Text(
         selectedCategory,
         style: const TextStyle(
-          fontSize: 24,
+          fontSize: AppTheme.fontSizeHeadingLarge,
           fontWeight: FontWeight.w700,
           color: AppTheme.textMain,
         ),
@@ -227,7 +230,7 @@ class _MainViewState extends State<MainView> {
             child: Text(
               group,
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: AppTheme.fontSizeHeadingLarge,
                 fontWeight: FontWeight.w500,
                 color: AppTheme.textMain,
               ),
@@ -235,17 +238,17 @@ class _MainViewState extends State<MainView> {
           ),
         ),
         const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          padding: EdgeInsets.symmetric(horizontal: AppTheme.paddingSmall),
           child: Icon(
             Icons.chevron_right,
-            size: 24,
-            color: Colors.grey,
+            size: AppTheme.iconSizeLarge,
+            color: AppTheme.grey500,
           ),
         ),
         Text(
           selectedCategory,
           style: const TextStyle(
-            fontSize: 24,
+            fontSize: AppTheme.fontSizeHeadingLarge,
             fontWeight: FontWeight.w700,
             color: AppTheme.textMain,
           ),
@@ -292,9 +295,7 @@ class _MainViewState extends State<MainView> {
                   children: [
                     if (selectedIndex == 0) CategorySidebar(iMat: iMat),
                     Expanded(child: _buildBody(iMat)),
-                    if (selectedIndex != 4 &&
-                        selectedIndex != 3 &&
-                        selectedIndex != 2)
+                    if (selectedIndex != 4 && selectedIndex != 3)
                       CartSidebar(
                         onCheckout: () => setState(() => selectedIndex = 4),
                       ),

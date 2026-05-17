@@ -29,40 +29,41 @@ class CheckoutCard extends StatelessWidget {
 // ── Navigation button ──
 class NavButton extends StatelessWidget {
   final String label;
-  final VoidCallback?
-  onPressed; // Korrigerat till nullable för att tillåta inaktivering
+  final VoidCallback? onPressed;
   final bool outlined;
 
   const NavButton({
     super.key,
     required this.label,
-    this.onPressed, // Tog bort required för att tillåta null
+    this.onPressed,
     this.outlined = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final Color bg = outlined ? Colors.white : CheckoutTheme.green;
-    final Color fg = outlined ? Colors.black : Colors.white;
+    final Color bg = outlined ? AppTheme.cardBackground : CheckoutTheme.green;
+    final Color fg = outlined ? AppTheme.colorBlack : AppTheme.colorWhite;
 
-    // Definiera kantlinje om knappen är 'outlined'
     final BorderSide side =
         outlined
-            ? const BorderSide(color: Colors.black, width: 1.5)
+            ? const BorderSide(
+              color: AppTheme.colorBlack,
+              width: AppTheme.borderEmphasis,
+            )
             : BorderSide.none;
 
     return ElevatedButton(
-      onPressed:
-          onPressed, // Flutter inaktiverar knappen automatiskt om onPressed är null
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: bg,
         foregroundColor: fg,
-        // Färger för inaktiverat läge (när onPressed är null)
-        disabledBackgroundColor: Colors.grey[300],
-        disabledForegroundColor: Colors.grey[600],
-        elevation: outlined ? 0 : 2,
+        disabledBackgroundColor: AppTheme.buttonDisabledBackground,
+        disabledForegroundColor: AppTheme.buttonDisabledForeground,
+        elevation: outlined ? AppTheme.elevationNone : AppTheme.elevationLow,
         side: side,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusFull),
+        ),
         padding: const EdgeInsets.symmetric(
           horizontal: AppTheme.paddingLarge,
           vertical: AppTheme.paddingMedium,
@@ -70,7 +71,10 @@ class NavButton extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: AppTheme.fontSizeBodyLarge,
+        ),
       ),
     );
   }
@@ -84,11 +88,14 @@ class FieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6, top: 12),
+      padding: const EdgeInsets.only(
+        bottom: AppTheme.paddingXSmall,
+        top: AppTheme.paddingMediumSmall,
+      ),
       child: Text(
         label,
         style: const TextStyle(
-          fontSize: 14,
+          fontSize: AppTheme.fontSizeBody,
           fontWeight: FontWeight.w500,
           color: CheckoutTheme.textDark,
         ),
@@ -121,13 +128,13 @@ class CheckoutTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
-        cursorColor: Colors.black,
+        cursorColor: AppTheme.colorBlack,
         enabled: enabled,
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(
             color: CheckoutTheme.textMuted,
-            fontSize: 13,
+            fontSize: AppTheme.fontSizeSmall,
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: AppTheme.paddingMediumSmall,
@@ -143,13 +150,13 @@ class CheckoutTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-            borderSide: BorderSide(
-              color: Colors.grey[700]!,
-              width: 1.5,
+            borderSide: const BorderSide(
+              color: AppTheme.grey700,
+              width: AppTheme.borderEmphasis,
             ),
           ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: AppTheme.cardBackground,
         ),
       ),
     );
@@ -174,7 +181,7 @@ class SummaryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingTiny),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -182,14 +189,14 @@ class SummaryRow extends StatelessWidget {
             label,
             style: TextStyle(
               color: grey ? CheckoutTheme.textMuted : CheckoutTheme.textDark,
-              fontSize: 15,
+              fontSize: AppTheme.fontSizeBodyLarge,
             ),
           ),
           Text(
             value,
             style: TextStyle(
               fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-              fontSize: 15,
+              fontSize: AppTheme.fontSizeBodyLarge,
             ),
           ),
         ],

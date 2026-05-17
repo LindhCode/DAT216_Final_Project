@@ -78,7 +78,7 @@ class _MainViewState extends State<MainView> {
             searchController: _searchController,
             selectedIndex: selectedIndex,
             onHomePressed: () => _resetToHome(context),
-            onShopPressed: () => setState(() => selectedIndex = 0),
+            onShopPressed: () => _resetToHome(context),
             onFavoritesPressed: () {
               setState(() => selectedIndex = 0);
               iMat.selectFavorites();
@@ -101,7 +101,7 @@ class _MainViewState extends State<MainView> {
                 // MITTEN: Breadcrumbs + Produkter / Eller andra sidor
                 Expanded(
                   child: Container(
-                    color: Colors.white,
+                    color: AppTheme.cardBackground,
                     child: _buildBody(iMat),
                   ),
                 ),

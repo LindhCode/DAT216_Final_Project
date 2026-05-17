@@ -64,13 +64,13 @@ class Step1Granskning extends StatelessWidget {
     );
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 700),
+      constraints: const BoxConstraints(maxWidth: AppTheme.contentWidthCheckout),
       child: Column(
         children: [
           const Text(
             '1. Granskning',
             style: TextStyle(
-              fontSize: 26,
+              fontSize: AppTheme.fontSizeDisplaySmall,
               fontWeight: FontWeight.bold,
               color: CheckoutTheme.textDark,
             ),
@@ -83,25 +83,32 @@ class Step1Granskning extends StatelessWidget {
               children: [
                 const Text(
                   'Dina varor',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: AppTheme.fontSizeTitle,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppTheme.paddingMedium),
 
                 if (cart.items.isEmpty)
                   const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
+                    padding: EdgeInsets.symmetric(vertical: AppTheme.paddingInset),
                     child: Center(child: Text("Din varukorg är tom.")),
                   )
                 else
                   ...cart.items.map(
                     (item) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppTheme.paddingSmall,
+                      ),
                       child: Row(
                         children: [
                           Expanded(
                             child: Text(
                               item.product.name,
-                              style: const TextStyle(fontSize: 15),
+                              style: const TextStyle(
+                                fontSize: AppTheme.fontSizeBodyLarge,
+                              ),
                             ),
                           ),
                           Text(
@@ -110,27 +117,32 @@ class Step1Granskning extends StatelessWidget {
                               color: CheckoutTheme.textMuted,
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: AppTheme.paddingMedium),
                           Text(
                             '${item.total.toStringAsFixed(2)} kr',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          const SizedBox(width: 24),
+                          const SizedBox(width: AppTheme.paddingLarge),
                           ElevatedButton.icon(
                             onPressed: () => iMat.shoppingCartRemove(item),
-                            icon: const Icon(Icons.delete_outline, size: 18),
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              size: AppTheme.iconSizeMedium,
+                            ),
                             label: const Text('Tag bort'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: CheckoutTheme.red,
-                              foregroundColor: Colors.white,
+                              foregroundColor: AppTheme.colorWhite,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: AppTheme.paddingSmall,
                                 vertical: AppTheme.paddingTiny,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppTheme.radiusRound),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusRound,
+                                ),
                               ),
-                              elevation: 0,
+                              elevation: AppTheme.elevationNone,
                             ),
                           ),
                         ],
@@ -146,16 +158,16 @@ class Step1Granskning extends StatelessWidget {
                     const Text(
                       'Summa varor',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: AppTheme.fontSizeSubtitle,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
                       '${totalSum.toStringAsFixed(2)} kr',
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: AppTheme.fontSizeTitle,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: AppTheme.colorBlack,
                       ),
                     ),
                   ],
@@ -177,15 +189,15 @@ class Step1Granskning extends StatelessWidget {
                 onPressed: cart.items.isEmpty ? null : onNext,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CheckoutTheme.green,
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor: Colors.grey[300],
-                  disabledForegroundColor: Colors.grey[600],
+                  foregroundColor: AppTheme.colorWhite,
+                  disabledBackgroundColor: AppTheme.buttonDisabledBackground,
+                  disabledForegroundColor: AppTheme.buttonDisabledForeground,
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppTheme.paddingLarge,
                     vertical: AppTheme.paddingMedium,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(999),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusFull),
                   ),
                 ),
                 child: const Text(

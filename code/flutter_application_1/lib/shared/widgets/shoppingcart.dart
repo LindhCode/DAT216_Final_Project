@@ -66,7 +66,7 @@ class CartSidebar extends StatelessWidget {
         final items = iMat.getShoppingCart().items;
 
         return Container(
-          width: 300,
+          width: AppTheme.cartSidebarWidth,
           color: AppTheme.sidebarBackground,
           child: Column(
             children: [
@@ -87,7 +87,7 @@ class CartSidebar extends StatelessWidget {
                     const Text(
                       "Min varukorg",
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: AppTheme.fontSizeHeading,
                         fontWeight: FontWeight.bold,
                         color: AppTheme.textMain,
                       ),
@@ -95,7 +95,10 @@ class CartSidebar extends StatelessWidget {
                   ],
                 ),
               ),
-              const Divider(height: 1, thickness: 1),
+              const Divider(
+                height: AppTheme.dividerHeight,
+                thickness: AppTheme.dividerHeight,
+              ),
               Expanded(
                 child:
                     items.isEmpty
@@ -106,7 +109,7 @@ class CartSidebar extends StatelessWidget {
                           ),
                         )
                         : ListView.builder(
-                          padding: EdgeInsets.zero,
+                          padding: AppTheme.paddingNone,
                           itemCount: items.length,
                           itemBuilder: (context, index) {
                             final item = items[index];
@@ -118,8 +121,8 @@ class CartSidebar extends StatelessWidget {
                               decoration: const BoxDecoration(
                                 border: Border(
                                   bottom: BorderSide(
-                                    color: Colors.black12,
-                                    width: 0.5,
+                                    color: AppTheme.borderSubtle,
+                                    width: AppTheme.borderThin,
                                   ),
                                 ),
                               ),
@@ -140,7 +143,7 @@ class CartSidebar extends StatelessWidget {
                                         Text(
                                           "${item.product.price.toStringAsFixed(2)} kr",
                                           style: const TextStyle(
-                                            fontSize: 12,
+                                            fontSize: AppTheme.fontSizeCaption,
                                             color: AppTheme.textSecondary,
                                           ),
                                         ),
@@ -163,7 +166,7 @@ class CartSidebar extends StatelessWidget {
                                       Text(
                                         "${item.amount.toInt()}",
                                         style: const TextStyle(
-                                          fontSize: 16,
+                                          fontSize: AppTheme.fontSizeSubtitle,
                                           fontWeight: FontWeight.bold,
                                           color: AppTheme.textMain,
                                         ),
@@ -189,7 +192,7 @@ class CartSidebar extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.all(AppTheme.paddingMedium),
-                color: Colors.white,
+                color: AppTheme.cardBackground,
                 child: Column(
                   children: [
                     Row(
@@ -198,7 +201,7 @@ class CartSidebar extends StatelessWidget {
                         const Text(
                           "Totalt:",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: AppTheme.fontSizeTitle,
                             fontWeight: FontWeight.bold,
                             color: AppTheme.textMain,
                           ),
@@ -206,11 +209,11 @@ class CartSidebar extends StatelessWidget {
                         Text(
                           "${iMat.shoppingCartTotal().toStringAsFixed(2)} kr",
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: AppTheme.fontSizeTitle,
                             fontWeight: FontWeight.bold,
                             color:
                                 AppTheme
-                                    .textMain, // Ändrad från Colors.green till AppTheme.textMain
+                                    .textMain,
                           ),
                         ),
                       ],
@@ -220,19 +223,21 @@ class CartSidebar extends StatelessWidget {
                       onPressed: items.isEmpty ? null : onCheckout,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryGreen,
+                        foregroundColor: AppTheme.colorWhite,
+                        elevation: AppTheme.elevationNone,
                         minimumSize: const Size(
                           double.infinity,
-                          AppTheme.paddingHero,
+                          AppTheme.buttonHeightLarge,
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusSmall,
-                          ),
-                        ),
+                        shape: const StadiumBorder(),
                       ),
                       child: const Text(
                         "Gå till kassan",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(
+                          color: AppTheme.colorWhite,
+                          fontSize: AppTheme.fontSizeHeadingSmall,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: AppTheme.paddingSmall),
@@ -242,19 +247,20 @@ class CartSidebar extends StatelessWidget {
                           : () => _confirmClearCart(context, iMat),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.accentRed,
+                        foregroundColor: AppTheme.colorWhite,
+                        elevation: AppTheme.elevationNone,
                         minimumSize: const Size(
                           double.infinity,
-                          AppTheme.paddingHero,
+                          AppTheme.buttonHeightStandard,
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            AppTheme.radiusSmall,
-                          ),
-                        ),
+                        shape: const StadiumBorder(),
                       ),
                       child: const Text(
                         "Töm varukorgen",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: AppTheme.colorWhite,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],

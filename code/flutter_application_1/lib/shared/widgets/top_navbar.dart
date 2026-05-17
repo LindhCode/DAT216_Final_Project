@@ -42,7 +42,6 @@ class _TopNavbarState extends State<TopNavbar> {
     final isHovered = hoveredIndex == index;
     final isSelected = widget.selectedIndex == index;
 
-    // 🟢 MITT KONTO-KNAPP
     if (isAccount) {
       return MouseRegion(
         onEnter: (_) => setState(() => hoveredIndex = index),
@@ -62,13 +61,17 @@ class _TopNavbarState extends State<TopNavbar> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.person, color: Colors.white, size: 22),
+                const Icon(
+                  Icons.person,
+                  color: AppTheme.onDarkPrimary,
+                  size: AppTheme.iconSizeNav,
+                ),
                 SizedBox(width: AppTheme.paddingXSmall),
                 Text(
                   "Mitt konto",
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                    color: AppTheme.onDarkPrimary,
+                    fontSize: AppTheme.fontSizeSubtitle,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -79,7 +82,6 @@ class _TopNavbarState extends State<TopNavbar> {
       );
     }
 
-    // ⚪ VANLIGA NAV-ITEMS
     return MouseRegion(
       onEnter: (_) => setState(() => hoveredIndex = index),
       onExit: (_) => setState(() => hoveredIndex = -1),
@@ -93,23 +95,30 @@ class _TopNavbarState extends State<TopNavbar> {
             vertical: AppTheme.paddingSmall,
           ),
           decoration: BoxDecoration(
-            color: isHovered ? Colors.white10 : Colors.transparent,
+            color: isHovered ? AppTheme.onDarkSubtle : AppTheme.colorTransparent,
             border:
                 isSelected
                     ? const Border(
-                      bottom: BorderSide(color: Colors.white, width: 2),
+                      bottom: BorderSide(
+                        color: AppTheme.onDarkPrimary,
+                        width: AppTheme.borderBold,
+                      ),
                     )
                     : null,
           ),
           child: Row(
             children: [
-              Icon(icon, color: Colors.white, size: 24),
+              Icon(
+                icon,
+                color: AppTheme.onDarkPrimary,
+                size: AppTheme.iconSizeLarge,
+              ),
               const SizedBox(width: AppTheme.paddingXSmall),
               Text(
                 label,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+                  color: AppTheme.onDarkPrimary,
+                  fontSize: AppTheme.fontSizeSubtitle,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -123,54 +132,48 @@ class _TopNavbarState extends State<TopNavbar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 65,
-      color: Colors.grey[900],
+      height: AppTheme.navbarHeight,
+      color: AppTheme.navbarDark,
       padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingMedium),
       child: Row(
         children: [
-          // 🏷️ LOGGA
           InkWell(
             borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
             onTap: widget.onHomePressed,
             child: Padding(
               padding: const EdgeInsets.only(right: AppTheme.paddingMedium),
-              child: Image.asset('assets/images/imat_logo.png', height: 55),
+              child: Image.asset(
+                'assets/images/imat_logo.png',
+                height: AppTheme.navbarLogoHeight,
+              ),
             ),
           ),
-
-          // 🛒 HANDLA
           navItem(
             index: 0,
             icon: Icons.shopping_cart_outlined,
             label: "Handla",
             onTap: widget.onShopPressed,
           ),
-
           const SizedBox(width: AppTheme.paddingMedium),
-
-          // ❤️ FAVORITER
           navItem(
             index: 1,
             icon: Icons.favorite_border,
             label: "Favoriter",
             onTap: widget.onFavoritesPressed,
           ),
-
           const SizedBox(width: AppTheme.paddingMedium),
-
-          // 🔍 SÖKRUTA
           Expanded(
             child: Center(
               child: SizedBox(
-                width: 500,
-                height: 42,
+                width: AppTheme.searchBarWidth,
+                height: AppTheme.searchBarHeight,
                 child: TextField(
                   controller: widget.searchController,
                   onChanged: widget.onSearchChanged,
                   decoration: InputDecoration(
                     hintText: "Sök produkter...",
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: AppTheme.cardBackground,
                     suffixIcon: const Icon(Icons.search),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: AppTheme.paddingInset,
@@ -184,20 +187,14 @@ class _TopNavbarState extends State<TopNavbar> {
               ),
             ),
           ),
-
           const SizedBox(width: AppTheme.paddingMedium),
-
-          // 📜 HISTORIK
           navItem(
             index: 2,
             icon: Icons.history,
             label: "Historik",
             onTap: widget.onHistoryPressed,
           ),
-
           const SizedBox(width: AppTheme.paddingMedium),
-
-          // 👤 MITT KONTO
           navItem(
             index: 3,
             icon: Icons.person,

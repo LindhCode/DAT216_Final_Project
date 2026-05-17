@@ -52,14 +52,17 @@ class _Step2LeveransState extends State<Step2Leverans> {
             selectedDate != null;
 
         return ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 700),
+          constraints: const BoxConstraints(maxWidth: AppTheme.contentWidthCheckout),
           child: Column(
             children: [
               const Text(
                 '2. Leverans',
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: AppTheme.fontSizeDisplaySmall,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppTheme.paddingLarge),
               CheckoutCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,11 +70,11 @@ class _Step2LeveransState extends State<Step2Leverans> {
                     const Text(
                       'Vart ska vi leverera?',
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: AppTheme.fontSizePrice,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppTheme.paddingMedium),
                     Row(
                       children: [
                         Expanded(
@@ -130,7 +133,7 @@ class _Step2LeveransState extends State<Step2Leverans> {
                     ),
                     const FieldLabel('Leveransdatum'),
                     Material(
-                      color: Colors.transparent,
+                      color: AppTheme.colorTransparent,
                       child: InkWell(
                         onTap: () async {
                           final picked = await showDatePicker(
@@ -148,22 +151,20 @@ class _Step2LeveransState extends State<Step2Leverans> {
                                 data: Theme.of(context).copyWith(
                                   colorScheme: ColorScheme.light(
                                     primary: Theme.of(context).primaryColor,
-                                    onPrimary: Colors.white,
-                                    surface: Colors.white,
-                                    onSurface: Colors.black87,
+                                    onPrimary: AppTheme.colorWhite,
+                                    surface: AppTheme.cardBackground,
+                                    onSurface: AppTheme.textMutedStrong,
                                   ),
-                                  dialogBackgroundColor: Colors.white,
+                                  dialogBackgroundColor: AppTheme.cardBackground,
                                   textButtonTheme: TextButtonThemeData(
                                     style: ButtonStyle(
-                                      // Gör texten svart i modalen
                                       foregroundColor: WidgetStateProperty.all(
-                                        Colors.black,
+                                        AppTheme.colorBlack,
                                       ),
-                                      // Detta förhindrar att Flutter tvingar texten till ALL CAPS ("OK"/"AVBRYT")
                                       textStyle: WidgetStateProperty.all(
                                         const TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 14,
+                                          fontSize: AppTheme.fontSizeBody,
                                         ),
                                       ),
                                     ),
@@ -186,16 +187,19 @@ class _Step2LeveransState extends State<Step2Leverans> {
                           duration: const Duration(milliseconds: 200),
                           padding: const EdgeInsets.symmetric(
                             horizontal: AppTheme.paddingMedium,
-                            vertical: 14,
+                            vertical: AppTheme.paddingBlock,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.grey[50],
+                            color: AppTheme.grey50,
                             border: Border.all(
                               color:
                                   selectedDate != null
-                                      ? Colors.grey[700]!
+                                      ? AppTheme.grey700
                                       : CheckoutTheme.border,
-                              width: selectedDate != null ? 2.0 : 1.0,
+                              width:
+                                  selectedDate != null
+                                      ? AppTheme.borderBold
+                                      : AppTheme.borderStandard,
                             ),
                             borderRadius: BorderRadius.circular(
                               AppTheme.radiusMedium,
@@ -209,24 +213,24 @@ class _Step2LeveransState extends State<Step2Leverans> {
                                     ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
                                     : 'Välj datum',
                                 style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: AppTheme.fontSizeBodyLarge,
                                   fontWeight:
                                       selectedDate != null
                                           ? FontWeight.w600
                                           : FontWeight.normal,
                                   color:
                                       selectedDate != null
-                                          ? Colors.black87
-                                          : Colors.grey[600],
+                                          ? AppTheme.textMutedStrong
+                                          : AppTheme.grey600,
                                 ),
                               ),
                               Icon(
                                 Icons.calendar_today_rounded,
-                                size: 20,
+                                size: AppTheme.iconSizeStandard,
                                 color:
                                     selectedDate != null
-                                        ? Colors.grey[700]!
-                                        : Colors.grey[500],
+                                        ? AppTheme.grey700
+                                        : AppTheme.grey500,
                               ),
                             ],
                           ),

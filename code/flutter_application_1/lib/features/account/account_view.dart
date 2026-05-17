@@ -89,41 +89,37 @@ class _AccountViewState extends State<AccountView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: AppTheme.grey100,
       body: SingleChildScrollView(
         child: Center(
           child: Container(
-            width: 600,
+            width: AppTheme.contentWidthNarrow,
             margin: const EdgeInsets.symmetric(vertical: AppTheme.paddingInset),
-            // We apply padding to the outer container so the title aligns with the box
             padding: const EdgeInsets.symmetric(
               horizontal: AppTheme.paddingLarge,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // --- TITLE (OUTSIDE THE BOX) ---
                 const Text(
                   'Mitt Konto',
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: AppTheme.fontSizeDisplay,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: AppTheme.colorBlack,
                   ),
                 ),
                 const SizedBox(height: AppTheme.paddingLarge),
-
-                // --- THE CONTENT BOX ---
                 Container(
                   padding: const EdgeInsets.all(AppTheme.paddingLarge),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
                     boxShadow: const [
                       BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
+                        color: AppTheme.shadowBlack12,
+                        blurRadius: AppTheme.shadowBlurLarge,
+                        offset: AppTheme.shadowOffsetCard,
                       ),
                     ],
                   ),
@@ -133,33 +129,31 @@ class _AccountViewState extends State<AccountView> {
                       const Text(
                         "Personuppgifter",
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: AppTheme.fontSizeHeading,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
                       const SizedBox(height: AppTheme.paddingInset),
-
                       field("Förnamn", firstName),
                       field("Efternamn", lastName),
                       field("Email", email),
                       field("Telefon", phone),
                       field("Mobil", mobile),
-
                       const SizedBox(height: AppTheme.paddingInset),
-
                       Align(
                         alignment: Alignment.centerRight,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.primaryGreen,
-                            foregroundColor: Colors.white,
+                            foregroundColor: AppTheme.colorWhite,
                             padding: const EdgeInsets.symmetric(
                               horizontal: AppTheme.paddingLarge,
                               vertical: AppTheme.paddingSmall,
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(999),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusFull,
+                              ),
                             ),
                           ),
                           onPressed: () {

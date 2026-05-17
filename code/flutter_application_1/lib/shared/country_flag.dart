@@ -1,0 +1,33 @@
+String countryFlagForOrigin(String origin) {
+  const flags = <String, String>{
+    'Sverige': '🇸🇪',
+    'Spanien': '🇪🇸',
+    'Italien': '🇮🇹',
+    'Frankrike': '🇫🇷',
+    'Tyskland': '🇩🇪',
+    'Nederländerna': '🇳🇱',
+    'Belgien': '🇧🇪',
+    'Danmark': '🇩🇰',
+    'Norge': '🇳🇴',
+    'Finland': '🇫🇮',
+    'Polen': '🇵🇱',
+    'Turkiet': '🇹🇷',
+    'Grekland': '🇬🇷',
+    'Portugal': '🇵🇹',
+    'Kina': '🇨🇳',
+    'Indien': '🇮🇳',
+    'USA': '🇺🇸',
+    'Marocko': '🇲🇦',
+    'Ecuador': '🇪🇨',
+    'Colombia': '🇨🇴',
+    'Brasilien': '🇧🇷',
+    'Chile': '🇨🇱',
+    'Peru': '🇵🇪',
+    'Israel': '🇮🇱',
+    'Egypten': '🇪🇬',
+    'Sydafrika': '🇿🇦',
+    'Thailand': '🇹🇭',
+    'Vietnam': '🇻🇳',
+  };
+  return flags[origin] ?? '🌍';
+}

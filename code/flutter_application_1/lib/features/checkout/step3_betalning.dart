@@ -38,8 +38,6 @@ class Step3Betalning extends StatelessWidget {
         cvcCtrl,
       ]),
       builder: (context, _) {
-        // Validering: Om bankkort (1) är valt måste fälten vara fyllda.
-        // Om Klarna (0) eller Swish (2) är valt är det alltid "valid" i detta steg.
         bool isValid =
             paymentMethod != 1 ||
             (cardFirstCtrl.text.isNotEmpty &&
@@ -49,20 +47,26 @@ class Step3Betalning extends StatelessWidget {
                 cvcCtrl.text.isNotEmpty);
 
         return ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 650),
+          constraints: const BoxConstraints(maxWidth: AppTheme.contentWidthPayment),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Center(
                 child: Text(
                   '3. Betalning',
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: AppTheme.fontSizeDisplaySmall,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: AppTheme.paddingLarge),
               const Text(
                 'Välj betalsätt...',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: AppTheme.fontSizePrice,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: AppTheme.paddingCompact),
 
@@ -91,7 +95,6 @@ class Step3Betalning extends StatelessWidget {
               ),
               const SizedBox(height: AppTheme.paddingMedium),
 
-              // Dynamiskt innehåll baserat på val
               if (paymentMethod == 1)
                 _CardDetailsCard(
                   cardFirstCtrl: cardFirstCtrl,
@@ -137,8 +140,6 @@ class Step3Betalning extends StatelessWidget {
   }
 }
 
-// ── Hjälp-widgets (De som saknades) ──
-
 class _PaymentOption extends StatelessWidget {
   final int index;
   final bool selected;
@@ -163,11 +164,11 @@ class _PaymentOption extends StatelessWidget {
         padding: const EdgeInsets.all(AppTheme.paddingMedium),
         decoration: BoxDecoration(
           color:
-              selected ? CheckoutTheme.green.withOpacity(0.05) : Colors.white,
+              selected ? AppTheme.primaryGreen05 : AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
           border: Border.all(
             color: selected ? CheckoutTheme.green : CheckoutTheme.border,
-            width: selected ? 2 : 1,
+            width: selected ? AppTheme.borderBold : AppTheme.borderStandard,
           ),
         ),
         child: Row(
@@ -278,17 +279,20 @@ class _KlarnaLogo extends StatelessWidget {
   const _KlarnaLogo();
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: const Color(0xFFFFB3C7),
-      borderRadius: BorderRadius.circular(4),
+    padding: const EdgeInsets.symmetric(
+      horizontal: AppTheme.paddingSmall,
+      vertical: AppTheme.paddingTiny,
     ),
-    child: Text(
+    decoration: BoxDecoration(
+      color: AppTheme.klarnaPink,
+      borderRadius: BorderRadius.circular(AppTheme.radiusTight),
+    ),
+    child: const Text(
       'Klarna.',
       style: TextStyle(
         fontWeight: FontWeight.w900,
-        fontSize: 12,
-        color: Colors.black,
+        fontSize: AppTheme.fontSizeCaption,
+        color: AppTheme.colorBlack,
       ),
     ),
   );
@@ -305,14 +309,18 @@ class _SwishLogo extends StatelessWidget {
   const _SwishLogo();
   @override
   Widget build(BuildContext context) => Container(
-    width: 24,
-    height: 24,
+    width: AppTheme.iconSizeLarge,
+    height: AppTheme.iconSizeLarge,
     decoration: const BoxDecoration(
-      color: Color(0xFF2DABE2),
+      color: AppTheme.swishBlue,
       shape: BoxShape.circle,
     ),
     child: const Center(
-      child: Icon(Icons.import_export, size: 16, color: Colors.white),
+      child: Icon(
+        Icons.import_export,
+        size: AppTheme.iconSizeSmall,
+        color: AppTheme.colorWhite,
+      ),
     ),
   );
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:imat_app/core/theme/app_theme.dart';
 
 class CheckoutStepIndicator extends StatelessWidget {
-  final int currentStep; // 0–3
+  final int currentStep;
   final ValueChanged<int>? onStepTap;
 
   static const _labels = [
@@ -21,15 +21,14 @@ class CheckoutStepIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity, // Låter den ta plats
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(
         vertical: AppTheme.paddingInset,
         horizontal: AppTheme.paddingMedium,
       ),
-      color: Colors.white,
+      color: AppTheme.cardBackground,
       child: Center(
         child: SingleChildScrollView(
-          // Försäkrar att den inte kraschar på små skärmar
           scrollDirection: Axis.horizontal,
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -40,17 +39,23 @@ class CheckoutStepIndicator extends StatelessWidget {
               return GestureDetector(
                 onTap: isClickable ? () => onStepTap!(index) : null,
                 child: MouseRegion(
-                  cursor: isClickable ? SystemMouseCursors.click : SystemMouseCursors.basic,
+                  cursor:
+                      isClickable
+                          ? SystemMouseCursors.click
+                          : SystemMouseCursors.basic,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       CustomPaint(
-                        // Mycket bredare (160), men behåller slimmad höjd (14)
-                        size: const Size(160, 14),
+                        size: const Size(
+                          AppTheme.stepChevronWidth,
+                          AppTheme.stepChevronHeight,
+                        ),
                         painter: _ChevronPainter(
-                          color: isDoneOrActive
-                              ? const Color(0xFF4C8C4A)
-                              : const Color(0xFFE0E0E0),
+                          color:
+                              isDoneOrActive
+                                  ? AppTheme.stepChevronActive
+                                  : AppTheme.grey300,
                           isFirst: index == 0,
                           isLast: index == _labels.length - 1,
                         ),
@@ -59,11 +64,15 @@ class CheckoutStepIndicator extends StatelessWidget {
                       Text(
                         _labels[index],
                         style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: index == currentStep
-                              ? FontWeight.bold
-                              : FontWeight.w500,
-                          color: index <= currentStep ? Colors.black : Colors.black45,
+                          fontSize: AppTheme.fontSizeSmall,
+                          fontWeight:
+                              index == currentStep
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
+                          color:
+                              index <= currentStep
+                                  ? AppTheme.colorBlack
+                                  : AppTheme.textMutedMedium,
                         ),
                       ),
                     ],
@@ -98,27 +107,27 @@ class _ChevronPainter extends CustomPainter {
           ..isAntiAlias = true;
 
     final path = Path();
-    const double arrowDepth = 12.0;
-    const double gap = 2.5;
+    const double arrowDepth = AppTheme.paddingMediumSmall;
+    const double gap = AppTheme.paddingMicro;
 
     if (isFirst) {
-      path.moveTo(10, 0);
+      path.moveTo(AppTheme.paddingCompact, 0);
       path.lineTo(size.width - arrowDepth, 0);
       path.lineTo(size.width, size.height / 2);
       path.lineTo(size.width - arrowDepth, size.height);
-      path.lineTo(10, size.height);
-      path.quadraticBezierTo(0, size.height, 0, size.height - 10);
-      path.lineTo(0, 10);
-      path.quadraticBezierTo(0, 0, 10, 0);
+      path.lineTo(AppTheme.paddingCompact, size.height);
+      path.quadraticBezierTo(0, size.height, 0, size.height - AppTheme.paddingCompact);
+      path.lineTo(0, AppTheme.paddingCompact);
+      path.quadraticBezierTo(0, 0, AppTheme.paddingCompact, 0);
     } else if (isLast) {
       path.moveTo(0, 0);
-      path.lineTo(size.width - 10, 0);
-      path.quadraticBezierTo(size.width, 0, size.width, 10);
-      path.lineTo(size.width, size.height - 10);
+      path.lineTo(size.width - AppTheme.paddingCompact, 0);
+      path.quadraticBezierTo(size.width, 0, size.width, AppTheme.paddingCompact);
+      path.lineTo(size.width, size.height - AppTheme.paddingCompact);
       path.quadraticBezierTo(
         size.width,
         size.height,
-        size.width - 10,
+        size.width - AppTheme.paddingCompact,
         size.height,
       );
       path.lineTo(0, size.height);

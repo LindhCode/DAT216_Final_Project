@@ -146,7 +146,7 @@ class CategorySidebar extends StatefulWidget {
 }
 
 class _CategorySidebarState extends State<CategorySidebar> {
-  static const double _sidebarWidth = 250;
+  static const double _sidebarWidth = AppTheme.categorySidebarWidth;
 
   /// Namn på öppnad huvudgrupp (accordion).
   String? _expandedGroupTitle;
@@ -192,13 +192,13 @@ class _CategorySidebarState extends State<CategorySidebar> {
             const Icon(
               Icons.filter_list,
               color: AppTheme.textMain,
-              size: 28,
+              size: AppTheme.iconSizeCategory,
             ),
             const SizedBox(width: AppTheme.paddingSmall),
             const Text(
               'Kategorier',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: AppTheme.fontSizeHeadingLarge,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textMain,
               ),
@@ -207,9 +207,9 @@ class _CategorySidebarState extends State<CategorySidebar> {
         ),
       ),
       Divider(
-        height: 1,
-        thickness: 1,
-        color: Colors.grey.withValues(alpha: 0.35),
+        height: AppTheme.dividerHeight,
+        thickness: AppTheme.dividerHeight,
+        color: AppTheme.dividerMuted,
       ),
     ];
 
@@ -220,9 +220,9 @@ class _CategorySidebarState extends State<CategorySidebar> {
       listChildren.add(_buildGroupColumn(context, iMat, group, present));
       listChildren.add(
         Divider(
-          height: 1,
-          thickness: 1,
-          color: Colors.grey.withValues(alpha: 0.35),
+          height: AppTheme.dividerHeight,
+          thickness: AppTheme.dividerHeight,
+          color: AppTheme.dividerMuted,
         ),
       );
     }
@@ -238,7 +238,10 @@ class _CategorySidebarState extends State<CategorySidebar> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: ListView(padding: EdgeInsets.zero, children: listChildren),
+              child: ListView(
+                padding: AppTheme.paddingNone,
+                children: listChildren,
+              ),
             ),
           ],
         ),
@@ -279,7 +282,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
                   child: Text(
                     group.title,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: AppTheme.fontSizeSubtitle,
                       fontWeight:
                           expanded || anyChildSelected
                               ? FontWeight.bold
@@ -321,7 +324,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: AppTheme.fontSizeBody,
               fontWeight: selected ? FontWeight.bold : FontWeight.normal,
               color: selected ? AppTheme.textMain : AppTheme.textSecondary,
             ),

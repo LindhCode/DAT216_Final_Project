@@ -147,7 +147,10 @@ class _CheckoutViewState extends State<CheckoutView> {
                   SnackBar(
                     content: const Row(
                       children: [
-                        Icon(Icons.check_circle, color: Colors.white),
+                        Icon(
+                          Icons.check_circle,
+                          color: AppTheme.colorWhite,
+                        ),
                         SizedBox(width: AppTheme.paddingMedium),
                         Text('Tack för din beställning! Ordern har sparats.'),
                       ],

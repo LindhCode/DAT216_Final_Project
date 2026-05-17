@@ -7,35 +7,34 @@ class CheckoutTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFF1B1B1B),
+      color: AppTheme.checkoutBarDark,
       padding: const EdgeInsets.symmetric(
         horizontal: AppTheme.paddingLarge,
         vertical: AppTheme.paddingMediumSmall,
       ),
       child: Row(
         children: [
-          // Logo
           Row(
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: AppTheme.checkoutLogoSize,
+                height: AppTheme.checkoutLogoSize,
                 decoration: BoxDecoration(
                   color: AppTheme.primaryGreen,
                   borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                 ),
                 child: const Icon(
                   Icons.shopping_bag,
-                  color: Colors.white,
-                  size: 20,
+                  color: AppTheme.onDarkPrimary,
+                  size: AppTheme.iconSizeStandard,
                 ),
               ),
               const SizedBox(width: AppTheme.paddingSmall),
               const Text(
                 'iMat',
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
+                  color: AppTheme.onDarkPrimary,
+                  fontSize: AppTheme.fontSizeHeading,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -46,26 +45,32 @@ class CheckoutTopBar extends StatelessWidget {
           const SizedBox(width: AppTheme.paddingLarge),
           _navItem(Icons.favorite_border, 'Mina Favoriter'),
           const SizedBox(width: AppTheme.paddingLarge),
-          // Search bar
           Expanded(
             child: Container(
-              height: 38,
+              height: AppTheme.buttonHeightSmall,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.12),
+                color: AppTheme.onDarkSurface,
                 borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-                border: Border.all(color: Colors.white24),
+                border: Border.all(color: AppTheme.onDarkBorder),
               ),
               padding: const EdgeInsets.symmetric(
                 horizontal: AppTheme.paddingMediumSmall,
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.search, color: Colors.white54, size: 18),
+                  Icon(
+                    Icons.search,
+                    color: AppTheme.onDarkMuted,
+                    size: AppTheme.iconSizeMedium,
+                  ),
                   SizedBox(width: AppTheme.paddingSmall),
                   Expanded(
                     child: Text(
                       'Sök bland våra hundratals varor...',
-                      style: TextStyle(color: Colors.white38, fontSize: 13),
+                      style: TextStyle(
+                        color: AppTheme.onDarkHint,
+                        fontSize: AppTheme.fontSizeSmall,
+                      ),
                     ),
                   ),
                 ],
@@ -79,15 +84,18 @@ class CheckoutTopBar extends StatelessWidget {
             onPressed: () {},
             icon: const Icon(
               Icons.person_outline,
-              color: Colors.white,
-              size: 16,
+              color: AppTheme.onDarkPrimary,
+              size: AppTheme.iconSizeSmall,
             ),
             label: const Text(
               'Logga in',
-              style: TextStyle(color: Colors.white, fontSize: 13),
+              style: TextStyle(
+                color: AppTheme.onDarkPrimary,
+                fontSize: AppTheme.fontSizeSmall,
+              ),
             ),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: Colors.white54),
+              side: const BorderSide(color: AppTheme.onDarkMuted),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppTheme.radiusPill),
               ),
@@ -105,11 +113,18 @@ class CheckoutTopBar extends StatelessWidget {
   Widget _navItem(IconData icon, String label) {
     return Row(
       children: [
-        Icon(icon, color: Colors.white70, size: 16),
+        Icon(
+          icon,
+          color: AppTheme.onDarkSecondary,
+          size: AppTheme.iconSizeSmall,
+        ),
         const SizedBox(width: AppTheme.paddingTiny),
         Text(
           label,
-          style: const TextStyle(color: Colors.white70, fontSize: 13),
+          style: const TextStyle(
+            color: AppTheme.onDarkSecondary,
+            fontSize: AppTheme.fontSizeSmall,
+          ),
         ),
       ],
     );

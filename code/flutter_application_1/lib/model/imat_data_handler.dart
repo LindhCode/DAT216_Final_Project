@@ -42,6 +42,8 @@ class ImatDataHandler extends ChangeNotifier {
   void selectAllProducts() {
     _selectProducts.clear();
     _selectProducts.addAll(_products);
+    _selectedCategory = "";
+    _isShowingFavorites = false;
     notifyListeners();
   }
 

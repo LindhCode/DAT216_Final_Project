@@ -43,8 +43,9 @@ class Breadcrumbs extends StatelessWidget {
                         child: Text(
                           label,
                           style: TextStyle(
-                            fontSize: 14,
-                            color: isLast ? Colors.black : Colors.grey[600],
+                            fontSize: AppTheme.fontSizeBody,
+                            color:
+                                isLast ? AppTheme.colorBlack : AppTheme.grey600,
                             fontWeight:
                                 isLast ? FontWeight.bold : FontWeight.normal,
                           ),
@@ -55,11 +56,10 @@ class Breadcrumbs extends StatelessWidget {
                           padding: EdgeInsets.symmetric(
                             horizontal: AppTheme.paddingSmall,
                           ),
-                          // Replaced the simple text ">" with the explicit shortcut icon
                           child: Icon(
                             Icons.open_in_new,
-                            color: Colors.grey,
-                            size: 14,
+                            color: AppTheme.grey500,
+                            size: AppTheme.fontSizeBody,
                           ),
                         ),
                     ],

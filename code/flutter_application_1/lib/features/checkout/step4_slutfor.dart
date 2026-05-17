@@ -29,14 +29,17 @@ class Step4Slutfor extends StatelessWidget {
         '${val.toStringAsFixed(2).replaceAll('.', ',')} kr';
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 700),
+      constraints: const BoxConstraints(maxWidth: AppTheme.contentWidthCheckout),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Center(
             child: Text(
               '4. Slutför',
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: AppTheme.fontSizeDisplaySmall,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: AppTheme.paddingLarge),
@@ -46,7 +49,10 @@ class Step4Slutfor extends StatelessWidget {
               children: [
                 const Text(
                   'Leverans',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: AppTheme.fontSizePrice,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SummaryRow('Datum', deliveryDate),
                 SummaryRow('Frakt', format(deliveryCost), bold: true),
@@ -59,7 +65,10 @@ class Step4Slutfor extends StatelessWidget {
               children: [
                 const Text(
                   'Betalning',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: AppTheme.fontSizePrice,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SummaryRow('Metod', paymentLabel),
                 SummaryRow('Att betala', format(total), bold: true),
@@ -76,18 +85,21 @@ class Step4Slutfor extends StatelessWidget {
                   onPressed: onPlaceOrder,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: CheckoutTheme.green,
-                    foregroundColor: Colors.white,
-                    elevation: 0, // Remove shadow
+                    foregroundColor: AppTheme.colorWhite,
+                    elevation: AppTheme.elevationNone,
                     padding: const EdgeInsets.symmetric(
                       vertical: AppTheme.paddingMedium,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(999),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusFull),
                     ),
                   ),
                   child: const Text(
                     'Slutför beställning >',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: AppTheme.fontSizeSubtitle,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

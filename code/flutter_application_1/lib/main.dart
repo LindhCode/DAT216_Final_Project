@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:imat_app/core/theme/app_theme.dart';
+import 'package:imat_app/features/checkout/checkout_view.dart';
 import 'package:imat_app/features/history/history_page.dart';
 import 'package:imat_app/features/home/main_view.dart';
+import 'package:imat_app/shared/widgets/shoppingcart.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +32,25 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const MainView(),
-        '/history': (context) => const HistoryPage(),
+        '/history': (context) => Scaffold(
+          backgroundColor: AppTheme.backgroundLight,
+          body: Row(
+            children: [
+              const Expanded(child: HistoryPage()),
+              CartSidebar(
+                onCheckout: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => CheckoutView(
+                        onNavigateToHistory: (_) => Navigator.of(ctx).pop(),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       },
     );
   }
