@@ -12,13 +12,20 @@ class Order {
   factory Order.fromJson(Map<String, dynamic> json) {
     int orderNumber = json[_orderNumber] as int;
     int timeStamp = json[_date] as int;
-    List jsonItems = json[_items];
+    var jsonItems = json[_items];
 
     List<ShoppingItem> items = [];
 
-    for (int i = 0; i < jsonItems.length; i++) {
-      ShoppingItem item = ShoppingItem.fromJson(jsonItems[i]);
-      items.add(item);
+    // Handle null or missing items
+    if (jsonItems != null && jsonItems is List) {
+      for (int i = 0; i < jsonItems.length; i++) {
+        try {
+          ShoppingItem item = ShoppingItem.fromJson(jsonItems[i]);
+          items.add(item);
+        } catch (e) {
+          print('Error parsing shopping item at index $i: $e');
+        }
+      }
     }
     return Order(
       orderNumber,
@@ -30,7 +37,7 @@ class Order {
   Map<String, dynamic> toJson() => {
     _orderNumber: orderNumber,
     _date: date.millisecondsSinceEpoch,
-    _items: jsonEncode(items.map((item) => item.toJson()).toList()),
+    _items: items.map((item) => item.toJson()).toList(),
   };
 
   double getTotal() {

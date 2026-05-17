@@ -179,26 +179,31 @@ class Step1Granskning extends StatelessWidget {
                           ),
                           SizedBox(
                             width: AppTheme.checkoutActionColumnWidth,
-                            child: ElevatedButton.icon(
-                              onPressed: () => iMat.shoppingCartRemove(item),
-                              icon: const Icon(
-                                Icons.delete_outline,
-                                size: AppTheme.iconSizeMedium,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                left: AppTheme.paddingMedium,
                               ),
-                              label: const Text('Tag bort'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: CheckoutTheme.red,
-                                foregroundColor: AppTheme.colorWhite,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: AppTheme.paddingSmall,
-                                  vertical: AppTheme.paddingTiny,
+                              child: ElevatedButton.icon(
+                                onPressed: () => iMat.shoppingCartRemove(item),
+                                icon: const Icon(
+                                  Icons.delete_outline,
+                                  size: AppTheme.iconSizeMedium,
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    AppTheme.radiusRound,
+                                label: const Text('Tag bort'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: CheckoutTheme.red,
+                                  foregroundColor: AppTheme.colorWhite,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppTheme.paddingSmall,
+                                    vertical: AppTheme.paddingTiny,
                                   ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusRound,
+                                    ),
+                                  ),
+                                  elevation: AppTheme.elevationNone,
                                 ),
-                                elevation: AppTheme.elevationNone,
                               ),
                             ),
                           ),

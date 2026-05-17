@@ -152,8 +152,9 @@ class InternetHandler {
     return deleteEndpoint("favorites", cid: kGroupId, pid: pid);
   }
 
-  static Future<String> placeOrder() async {
-    return putEndpoint("orders", json: jsonEncode([]), cid: kGroupId);
+  static Future<String> placeOrder(ShoppingCart cart) async {
+    List<Map<String, dynamic>> itemsList = cart.items.map((item) => item.toJson()).toList();
+    return putEndpoint("orders", json: jsonEncode(itemsList), cid: kGroupId);
   }
 
   static Future<String> reset() async {

@@ -345,8 +345,8 @@ void placeOrder() async {
       // Utan detta tror servern att korgen är tom när placeOrder körs.
       await InternetHandler.setShoppingCart(_shoppingCart);
 
-      // 2. SKAPA ORDER: Nu vet servern vad som ska köpas.
-      await InternetHandler.placeOrder();
+      // 2. SKAPA ORDER: Skicka items tillsammans med order-requesten.
+      await InternetHandler.placeOrder(_shoppingCart);
 
       // 3. RENSA LOKALT: Töm listan med items inuti korg-objektet.
       _shoppingCart.items.clear();
