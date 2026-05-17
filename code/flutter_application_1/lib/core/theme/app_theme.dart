@@ -33,20 +33,20 @@ class AppTheme {
   static const double radiusFull = 999.0;
 
   // ── Font sizes ────────────────────────────────────────────────────────────
-  static const double fontSizeCaption = 12.0;
-  static const double fontSizeSmall = 13.0;
-  static const double fontSizeBody = 14.0;
-  static const double fontSizeBodyLarge = 15.0;
-  static const double fontSizeSubtitle = 16.0;
-  static const double fontSizePrice = 17.0;
-  static const double fontSizeTitle = 18.0;
-  static const double fontSizeHeadingSmall = 20.0;
-  static const double fontSizeHeading = 22.0;
-  static const double fontSizeHeadingLarge = 24.0;
-  static const double fontSizeDisplaySmall = 26.0;
-  static const double fontSizeDisplay = 32.0;
-  static const double fontSizePriceModal = 20.0;
-  static const double fontSizePriceHero = 26.0;
+  static const double fontSizeCaption = 14.0;
+  static const double fontSizeSmall = 15.0;
+  static const double fontSizeBody = 16.0;
+  static const double fontSizeBodyLarge = 17.0;
+  static const double fontSizeSubtitle = 18.0;
+  static const double fontSizePrice = 19.0;
+  static const double fontSizeTitle = 20.0;
+  static const double fontSizeHeadingSmall = 22.0;
+  static const double fontSizeHeading = 24.0;
+  static const double fontSizeHeadingLarge = 26.0;
+  static const double fontSizeDisplaySmall = 28.0;
+  static const double fontSizeDisplay = 34.0;
+  static const double fontSizePriceModal = 22.0;
+  static const double fontSizePriceHero = 28.0;
 
   // ── Icon sizes ────────────────────────────────────────────────────────────
   static const double iconSizeSmall = 16.0;

@@ -81,14 +81,61 @@ class Step1Granskning extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Dina varor',
                   style: TextStyle(
-                    fontSize: AppTheme.fontSizeTitle,
+                    fontSize: AppTheme.fontSizeHeadingSmall,
                     fontWeight: FontWeight.bold,
+                    color: AppTheme.textMain,
                   ),
                 ),
                 const SizedBox(height: AppTheme.paddingMedium),
+
+                // Header row to clarify columns: Produkt | Antal | Pris
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingSmall),
+                  child: Row(
+                    children: const [
+                      Flexible(
+                        flex: 3,
+                        child: Text(
+                          'Produkt',
+                          style: TextStyle(
+                            fontSize: AppTheme.fontSizeSubtitle,
+                            fontWeight: FontWeight.w600,
+                            color: CheckoutTheme.textMuted,
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 2,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Antal',
+                              style: TextStyle(
+                                fontSize: AppTheme.fontSizeSubtitle,
+                                fontWeight: FontWeight.w600,
+                                color: CheckoutTheme.textMuted,
+                              ),
+                            ),
+                            SizedBox(width: AppTheme.paddingMedium),
+                            Text(
+                              'Pris',
+                              style: TextStyle(
+                                fontSize: AppTheme.fontSizeSubtitle,
+                                fontWeight: FontWeight.w600,
+                                color: CheckoutTheme.textMuted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: AppTheme.paddingLarge),
+                    ],
+                  ),
+                ),
 
                 if (cart.items.isEmpty)
                   const Padding(
@@ -202,7 +249,10 @@ class Step1Granskning extends StatelessWidget {
                 ),
                 child: const Text(
                   'Till Leverans >',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppTheme.fontSizeBodyLarge,
+                  ),
                 ),
               ),
             ],
