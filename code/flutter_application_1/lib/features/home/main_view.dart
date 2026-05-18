@@ -77,7 +77,7 @@ class _MainViewState extends State<MainView> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Du letar bland: Favoriter',
+                      'Dina favoriter',
                       style: const TextStyle(
                         fontSize: AppTheme.fontSizeHeadingSmall,
                         fontWeight: FontWeight.w600,
@@ -88,7 +88,10 @@ class _MainViewState extends State<MainView> {
                 ),
                 Expanded(
                   child: GridView.builder(
-                    padding: const EdgeInsets.all(AppTheme.paddingLarge),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppTheme.paddingLarge * 2,
+                      vertical: AppTheme.paddingLarge,
+                    ),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       childAspectRatio: AppTheme.gridAspectRatioHome,
@@ -97,8 +100,7 @@ class _MainViewState extends State<MainView> {
                     ),
                     cacheExtent: 400,
                     itemCount: products.length,
-                    itemBuilder:
-                        (context, index) => ProductCard(product: products[index]),
+                    itemBuilder: (context, index) => ProductCard(product: products[index]),
                   ),
                 ),
               ],
