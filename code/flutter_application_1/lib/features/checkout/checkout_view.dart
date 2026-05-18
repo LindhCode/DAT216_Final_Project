@@ -30,6 +30,10 @@ class _CheckoutViewState extends State<CheckoutView> {
   final _cityCtrl = TextEditingController();
   final _notesCtrl = TextEditingController();
 
+  // Leveransinställningar
+  DateTime? _deliveryDate;
+  String _deliveryTime = '';
+
   // Betalningsinställningar
   int _paymentMethod = 1; // 0=Klarna, 1=Kort, 2=Swish
   final _cardFirstCtrl = TextEditingController();
@@ -114,6 +118,10 @@ class _CheckoutViewState extends State<CheckoutView> {
           postCodeCtrl: _postCodeCtrl,
           cityCtrl: _cityCtrl,
           notesCtrl: _notesCtrl,
+          selectedDate: _deliveryDate,
+          deliveryTime: _deliveryTime,
+          onDeliveryDateChanged: (date) => setState(() => _deliveryDate = date),
+          onDeliveryTimeChanged: (time) => setState(() => _deliveryTime = time),
           onNext: _nextStep,
           onPrev: _prevStep,
         );
@@ -135,7 +143,9 @@ class _CheckoutViewState extends State<CheckoutView> {
           iMat: iMat,
           cartTotal: totalSum,
           deliveryCost: 49.0,
-          deliveryDate: 'Idag, 14:00 - 16:00',
+          deliveryDate: _deliveryDate != null
+              ? '${_deliveryDate!.day}/${_deliveryDate!.month}/${_deliveryDate!.year}${_deliveryTime.isNotEmpty ? ' $_deliveryTime' : ''}'
+              : (_deliveryTime.isNotEmpty ? _deliveryTime : 'Välj tid'),
           paymentLabel: _paymentMethod == 1 
               ? 'Bankkort' 
               : (_paymentMethod == 0 ? 'Klarna' : 'Swish'),

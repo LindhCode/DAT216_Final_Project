@@ -12,6 +12,10 @@ class Step2Leverans extends StatefulWidget {
   final TextEditingController postCodeCtrl;
   final TextEditingController cityCtrl;
   final TextEditingController notesCtrl;
+  final DateTime? selectedDate;
+  final String deliveryTime;
+  final ValueChanged<DateTime?> onDeliveryDateChanged;
+  final ValueChanged<String> onDeliveryTimeChanged;
   final VoidCallback onNext;
   final VoidCallback onPrev;
 
@@ -23,6 +27,10 @@ class Step2Leverans extends StatefulWidget {
     required this.postCodeCtrl,
     required this.cityCtrl,
     required this.notesCtrl,
+    required this.selectedDate,
+    required this.deliveryTime,
+    required this.onDeliveryDateChanged,
+    required this.onDeliveryTimeChanged,
     required this.onNext,
     required this.onPrev,
   });
@@ -33,11 +41,14 @@ class Step2Leverans extends StatefulWidget {
 
 class _Step2LeveransState extends State<Step2Leverans> {
   DateTime? selectedDate;
+  String? selectedDeliveryTime;
   String selectedDeliveryMethod = 'standard';
 
   @override
   void initState() {
     super.initState();
+    selectedDate = widget.selectedDate;
+    selectedDeliveryTime = widget.deliveryTime.isNotEmpty ? widget.deliveryTime : null;
     _prefillCustomerData();
   }
 
@@ -132,6 +143,7 @@ class _Step2LeveransState extends State<Step2Leverans> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: AppTheme.paddingMedium),
                     const FieldLabel('Gatuadress'),
                     CheckoutTextField(controller: widget.addressCtrl),
                     Row(
@@ -161,6 +173,7 @@ class _Step2LeveransState extends State<Step2Leverans> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: AppTheme.paddingMedium),
                     const FieldLabel('Leveransdatum'),
                     Material(
                       color: AppTheme.colorTransparent,
@@ -208,6 +221,7 @@ class _Step2LeveransState extends State<Step2Leverans> {
                             setState(() {
                               selectedDate = picked;
                             });
+                            widget.onDeliveryDateChanged(picked);
                           }
                         },
                         borderRadius: BorderRadius.circular(
@@ -266,6 +280,52 @@ class _Step2LeveransState extends State<Step2Leverans> {
                           ),
                         ),
                       ),
+                    ),
+                    const SizedBox(height: AppTheme.paddingMedium),
+                    const FieldLabel('Leveranstid'),
+                    DropdownButtonFormField<String>(
+                      value: selectedDeliveryTime,
+                      hint: const Text(
+                        'Välj tid',
+                        style: TextStyle(
+                          fontSize: AppTheme.fontSizeBodyLarge,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontSize: AppTheme.fontSizeBodyLarge,
+                        color: AppTheme.colorBlack,
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppTheme.grey50,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                          borderSide: const BorderSide(color: CheckoutTheme.border),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                          borderSide: BorderSide(color: AppTheme.primaryGreen),
+                        ),
+                      ),
+                      items: const [
+                        '12:00 - 14:00',
+                        '14:00 - 16:00',
+                        '16:00 - 18:00',
+                        '18:00 - 20:00',
+                      ].map((time) {
+                        return DropdownMenuItem<String>(
+                          value: time,
+                          child: Text(time),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            selectedDeliveryTime = value;
+                          });
+                          widget.onDeliveryTimeChanged(value);
+                        }
+                      },
                     ),
                   ],
                 ),
