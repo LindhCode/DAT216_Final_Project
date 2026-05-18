@@ -317,7 +317,7 @@ class _SwishLogo extends StatelessWidget {
     ),
     child: const Center(
       child: Icon(
-        Icons.import_export,
+        Icons.phone_iphone,
         size: AppTheme.iconSizeSmall,
         color: AppTheme.colorWhite,
       ),

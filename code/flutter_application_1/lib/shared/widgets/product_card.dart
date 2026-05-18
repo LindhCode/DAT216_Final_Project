@@ -210,6 +210,44 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                // ℹ️ INFO BUTTON (top-left) — opens product detail modal
+                Positioned(
+                  top: AppTheme.paddingSmall,
+                  left: AppTheme.paddingSmall,
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: Ink(
+                      decoration: const BoxDecoration(
+                        color: AppTheme.favoriteButtonSurface,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.shadowBlack05,
+                            blurRadius: AppTheme.shadowBlurSmall,
+                          ),
+                        ],
+                      ),
+                      child: InkWell(
+                        splashFactory: NoSplash.splashFactory,
+                        highlightColor: AppTheme.colorTransparent,
+                        hoverColor: Colors.black.withOpacity(0.08),
+                        mouseCursor: SystemMouseCursors.click,
+                        customBorder: const CircleBorder(),
+                        onTap: () => showProductDetailModal(context, product),
+                        child: Padding(
+                          padding: const EdgeInsets.all(
+                            AppTheme.paddingXSmall,
+                          ),
+                          child: Icon(
+                            Icons.info_outline,
+                            size: AppTheme.iconSizeStandard,
+                            color: AppTheme.textMain,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           );
