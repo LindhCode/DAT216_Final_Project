@@ -171,35 +171,37 @@ class ProductCard extends StatelessWidget {
                   right: AppTheme.paddingSmall,
                   child: Material(
                     type: MaterialType.transparency,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(
-                        AppTheme.radiusFavorite,
+                    child: Ink(
+                      decoration: const BoxDecoration(
+                        color: AppTheme.favoriteButtonSurface,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.shadowBlack05,
+                            blurRadius: AppTheme.shadowBlurSmall,
+                          ),
+                        ],
                       ),
-                      onTap: () => iMat.toggleFavorite(product),
-                      child: Container(
-                        padding: const EdgeInsets.all(AppTheme.paddingXSmall),
-                        decoration: const BoxDecoration(
-                          color: AppTheme.favoriteButtonSurface,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppTheme.shadowBlack05,
-                              blurRadius: AppTheme.shadowBlurSmall,
+                      child: InkWell(
+                        splashFactory: NoSplash.splashFactory,
+                        highlightColor: AppTheme.colorTransparent,
+                        hoverColor: AppTheme.favoriteButtonSurface.withOpacity(0.35),
+                        customBorder: const CircleBorder(),
+                        onTap: () => iMat.toggleFavorite(product),
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppTheme.paddingXSmall),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 150),
+                            child: Icon(
+                              isFav
+                                  ? Icons.favorite
+                                  : Icons.favorite_border_rounded,
+                              key: ValueKey<bool>(isFav),
+                              size: AppTheme.iconSizeStandard,
+                              color: isFav
+                                  ? AppTheme.accentRed
+                                  : AppTheme.grey400,
                             ),
-                          ],
-                        ),
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 150),
-                          child: Icon(
-                            isFav
-                                ? Icons.favorite
-                                : Icons.favorite_border_rounded,
-                            key: ValueKey<bool>(isFav),
-                            size: AppTheme.iconSizeStandard,
-                            color:
-                                isFav
-                                    ? AppTheme.accentRed
-                                    : AppTheme.grey400,
                           ),
                         ),
                       ),

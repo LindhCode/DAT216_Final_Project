@@ -77,14 +77,25 @@ class _BuyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.primaryGreen,
-        foregroundColor: AppTheme.colorWhite,
-        shape: const StadiumBorder(),
-        elevation: AppTheme.elevationNone,
-        padding: AppTheme.paddingNone,
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return AppTheme.primaryGreen.withOpacity(0.92);
+          }
+          return AppTheme.primaryGreen;
+        }),
+        foregroundColor:
+            MaterialStateProperty.all(AppTheme.colorWhite),
+        shape: MaterialStateProperty.all(const StadiumBorder()),
+        elevation: MaterialStateProperty.all(AppTheme.elevationNone),
+        padding: MaterialStateProperty.all(AppTheme.paddingNone),
         splashFactory: NoSplash.splashFactory,
-        overlayColor: AppTheme.colorTransparent,
+        overlayColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return AppTheme.colorWhite.withOpacity(0.08);
+          }
+          return AppTheme.colorTransparent;
+        }),
       ),
       onPressed: () {
         iMat.shoppingCartAdd(ShoppingItem(product, amount: 1.0));
@@ -188,21 +199,8 @@ class _QtyIconButton extends StatelessWidget {
       child: InkWell(
         splashFactory: NoSplash.splashFactory,
         highlightColor: AppTheme.colorTransparent,
-        hoverColor: AppTheme.colorTransparent,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(
-            isLeftEdge ? AppTheme.radiusStadium : AppTheme.radiusSmall,
-          ),
-          bottomLeft: Radius.circular(
-            isLeftEdge ? AppTheme.radiusStadium : AppTheme.radiusSmall,
-          ),
-          topRight: Radius.circular(
-            !isLeftEdge ? AppTheme.radiusStadium : AppTheme.radiusSmall,
-          ),
-          bottomRight: Radius.circular(
-            !isLeftEdge ? AppTheme.radiusStadium : AppTheme.radiusSmall,
-          ),
-        ),
+        hoverColor: AppTheme.primaryGreen25,
+        customBorder: const CircleBorder(),
         onTap: onPressed,
         child: Padding(
           padding: const EdgeInsets.symmetric(
