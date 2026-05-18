@@ -95,7 +95,7 @@ class Step4Slutfor extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
-                    'Slutför beställning >',
+                    'Slutför beställning',
                     style: TextStyle(
                       fontSize: AppTheme.fontSizeSubtitle,
                       fontWeight: FontWeight.bold,

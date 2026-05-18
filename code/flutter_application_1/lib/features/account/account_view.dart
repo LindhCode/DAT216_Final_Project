@@ -169,6 +169,75 @@ class _AccountViewState extends State<AccountView> {
                     ],
                   ),
                 ),
+                const SizedBox(height: AppTheme.paddingLarge),
+                Container(
+                  padding: const EdgeInsets.all(AppTheme.paddingLarge),
+                  decoration: BoxDecoration(
+                    color: AppTheme.cardBackground,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: AppTheme.shadowBlack12,
+                        blurRadius: AppTheme.shadowBlurLarge,
+                        offset: AppTheme.shadowOffsetCard,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Leveransuppgifter",
+                        style: TextStyle(
+                          fontSize: AppTheme.fontSizeHeading,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: AppTheme.paddingInset),
+                      field("Gatuadress", address),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: field("Postnummer", postCode),
+                          ),
+                          const SizedBox(width: AppTheme.paddingMedium),
+                          Expanded(
+                            flex: 3,
+                            child: field("Ort", city),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppTheme.paddingInset),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryGreen,
+                            foregroundColor: AppTheme.colorWhite,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppTheme.paddingLarge,
+                              vertical: AppTheme.paddingSmall,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusFull,
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (isEditing) {
+                              save();
+                            } else {
+                              setState(() => isEditing = true);
+                            }
+                          },
+                          child: Text(isEditing ? "Spara" : "Redigera"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

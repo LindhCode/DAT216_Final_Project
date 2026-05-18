@@ -122,7 +122,7 @@ class Step3Betalning extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   NavButton(
-                    label: 'Tillbaka',
+                    label: '< Tillbaka',
                     onPressed: onPrev,
                     outlined: true,
                   ),

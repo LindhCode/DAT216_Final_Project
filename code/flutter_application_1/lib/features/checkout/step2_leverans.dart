@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:imat_app/core/theme/app_theme.dart';
+import 'package:imat_app/model/imat_data_handler.dart';
+import 'package:provider/provider.dart';
 import 'checkout_theme.dart';
 import 'checkout_widgets.dart';
 
@@ -31,6 +33,34 @@ class Step2Leverans extends StatefulWidget {
 
 class _Step2LeveransState extends State<Step2Leverans> {
   DateTime? selectedDate;
+  String selectedDeliveryMethod = 'standard';
+
+  @override
+  void initState() {
+    super.initState();
+    _prefillCustomerData();
+  }
+
+  void _prefillCustomerData() {
+    final iMat = context.read<ImatDataHandler>();
+    final customer = iMat.getCustomer();
+
+    if (widget.firstNameCtrl.text.isEmpty && customer.firstName.isNotEmpty) {
+      widget.firstNameCtrl.text = customer.firstName;
+    }
+    if (widget.lastNameCtrl.text.isEmpty && customer.lastName.isNotEmpty) {
+      widget.lastNameCtrl.text = customer.lastName;
+    }
+    if (widget.addressCtrl.text.isEmpty && customer.address.isNotEmpty) {
+      widget.addressCtrl.text = customer.address;
+    }
+    if (widget.postCodeCtrl.text.isEmpty && customer.postCode.isNotEmpty) {
+      widget.postCodeCtrl.text = customer.postCode;
+    }
+    if (widget.cityCtrl.text.isEmpty && customer.postAddress.isNotEmpty) {
+      widget.cityCtrl.text = customer.postAddress;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
