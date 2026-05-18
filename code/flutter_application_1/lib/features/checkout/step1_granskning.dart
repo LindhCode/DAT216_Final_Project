@@ -18,41 +18,9 @@ class Step1Granskning extends StatelessWidget {
 
   String _quantityLabel(item) {
     final amount = item.amount;
-    final rawUnit = item.product.unit.trim();
-    final unit = rawUnit.toLowerCase();
-
-    String amountText() {
-      return amount.truncateToDouble() == amount
-          ? amount.toInt().toString()
-          : amount.toStringAsFixed(2);
-    }
-
-    String quantityUnit() {
-      if (unit.startsWith('kr/')) {
-        return rawUnit.split('/').last;
-      }
-      if (unit.contains('/')) {
-        final parts = rawUnit.split('/');
-        if (parts.length == 2 && parts.first.toLowerCase().contains('kr')) {
-          return parts.last;
-        }
-      }
-      if (unit.contains('kg')) {
-        return 'kg';
-      }
-      if (unit.contains('st')) {
-        return 'st';
-      }
-      if (unit.contains('förp')) {
-        return 'förp';
-      }
-      return rawUnit;
-    }
-
-    final unitLabel = quantityUnit();
-    final amountLabel = amountText();
-
-    return unitLabel.isEmpty ? amountLabel : '$amountLabel $unitLabel';
+    return amount.truncateToDouble() == amount
+        ? amount.toInt().toString()
+        : amount.toStringAsFixed(2);
   }
 
   @override
@@ -93,7 +61,7 @@ class Step1Granskning extends StatelessWidget {
 
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    vertical: AppTheme.paddingSmall,
+                    vertical: AppTheme.paddingMedium,
                   ),
                   child: Row(
                     children: const [
@@ -102,20 +70,8 @@ class Step1Granskning extends StatelessWidget {
                           'Produkt',
                           style: TextStyle(
                             fontSize: AppTheme.fontSizeSubtitle,
-                            fontWeight: FontWeight.w600,
-                            color: CheckoutTheme.textMuted,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: AppTheme.checkoutQuantityColumnWidth,
-                        child: Text(
-                          'Antal',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            fontSize: AppTheme.fontSizeSubtitle,
-                            fontWeight: FontWeight.w600,
-                            color: CheckoutTheme.textMuted,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textMain,
                           ),
                         ),
                       ),
@@ -123,11 +79,23 @@ class Step1Granskning extends StatelessWidget {
                         width: AppTheme.checkoutPriceColumnWidth,
                         child: Text(
                           'Pris',
-                          textAlign: TextAlign.right,
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: AppTheme.fontSizeSubtitle,
-                            fontWeight: FontWeight.w600,
-                            color: CheckoutTheme.textMuted,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textMain,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: AppTheme.checkoutQuantityColumnWidth,
+                        child: Text(
+                          'Antal',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: AppTheme.fontSizeSubtitle,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textMain,
                           ),
                         ),
                       ),
@@ -135,6 +103,8 @@ class Step1Granskning extends StatelessWidget {
                     ],
                   ),
                 ),
+
+                const Divider(height: AppTheme.paddingMedium),
 
                 if (cart.items.isEmpty)
                   const Padding(
@@ -145,7 +115,7 @@ class Step1Granskning extends StatelessWidget {
                   ...cart.items.map(
                     (item) => Padding(
                       padding: const EdgeInsets.symmetric(
-                        vertical: AppTheme.paddingSmall,
+                        vertical: AppTheme.paddingMedium,
                       ),
                       child: Row(
                         children: [
@@ -154,16 +124,8 @@ class Step1Granskning extends StatelessWidget {
                               item.product.name,
                               style: const TextStyle(
                                 fontSize: AppTheme.fontSizeBodyLarge,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: AppTheme.checkoutQuantityColumnWidth,
-                            child: Text(
-                              _quantityLabel(item),
-                              textAlign: TextAlign.right,
-                              style: const TextStyle(
-                                color: CheckoutTheme.textMuted,
+                                fontWeight: FontWeight.w500,
+                                color: AppTheme.textMain,
                               ),
                             ),
                           ),
@@ -171,10 +133,56 @@ class Step1Granskning extends StatelessWidget {
                             width: AppTheme.checkoutPriceColumnWidth,
                             child: Text(
                               '${item.total.toStringAsFixed(2)} kr',
-                              textAlign: TextAlign.right,
+                              textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: AppTheme.textMain,
                               ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: AppTheme.checkoutQuantityColumnWidth,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  iconSize: 26,
+                                  icon: const Icon(
+                                    Icons.remove_circle_outline,
+                                    color: AppTheme.textSecondary,
+                                  ),
+                                  onPressed: () {
+                                    iMat.shoppingCartUpdate(item, delta: -1.0);
+                                  },
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _quantityLabel(item),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: AppTheme.textMain,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  iconSize: 26,
+                                  icon: const Icon(
+                                    Icons.add_circle_outline,
+                                    color: AppTheme.textSecondary,
+                                  ),
+                                  onPressed: () {
+                                    iMat.shoppingCartUpdate(item, delta: 1.0);
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
