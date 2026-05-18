@@ -132,7 +132,7 @@ class _MainViewState extends State<MainView> {
                     style: TextStyle(
                       fontSize: AppTheme.fontSizeSmall,
                       fontWeight: FontWeight.w500,
-                      color: AppTheme.grey500,
+                      color: AppTheme.grey600,
                     ),
                   ),
                   const SizedBox(height: AppTheme.paddingTiny),
