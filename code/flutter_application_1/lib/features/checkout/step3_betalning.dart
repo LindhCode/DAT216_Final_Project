@@ -57,6 +57,7 @@ class Step3Betalning extends StatelessWidget {
                   style: TextStyle(
                     fontSize: AppTheme.fontSizeDisplaySmall,
                     fontWeight: FontWeight.bold,
+                    color: CheckoutTheme.textDark,
                   ),
                 ),
               ),

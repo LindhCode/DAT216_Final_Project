@@ -39,6 +39,7 @@ class Step4Slutfor extends StatelessWidget {
               style: TextStyle(
                 fontSize: AppTheme.fontSizeDisplaySmall,
                 fontWeight: FontWeight.bold,
+                color: CheckoutTheme.textDark,
               ),
             ),
           ),

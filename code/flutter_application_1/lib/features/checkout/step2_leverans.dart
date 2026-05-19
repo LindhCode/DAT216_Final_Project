@@ -101,6 +101,7 @@ class _Step2LeveransState extends State<Step2Leverans> {
                 style: TextStyle(
                   fontSize: AppTheme.fontSizeDisplaySmall,
                   fontWeight: FontWeight.bold,
+                  color: CheckoutTheme.textDark,
                 ),
               ),
               const SizedBox(height: AppTheme.paddingLarge),
