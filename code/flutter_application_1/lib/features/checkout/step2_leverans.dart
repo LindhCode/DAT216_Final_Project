@@ -112,8 +112,9 @@ class _Step2LeveransState extends State<Step2Leverans> {
                     const Text(
                       'Vart ska vi leverera?',
                       style: TextStyle(
-                        fontSize: AppTheme.fontSizePrice,
+                        fontSize: AppTheme.fontSizeHeadingSmall,
                         fontWeight: FontWeight.bold,
+                        color: AppTheme.textMain,
                       ),
                     ),
                     const SizedBox(height: AppTheme.paddingMedium),

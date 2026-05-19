@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:imat_app/core/theme/app_theme.dart';
 import 'checkout_theme.dart';
 
@@ -109,6 +110,7 @@ class CheckoutTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? hint;
   final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
   final double? width;
   final bool enabled;
 
@@ -117,6 +119,7 @@ class CheckoutTextField extends StatelessWidget {
     required this.controller,
     this.hint,
     this.keyboardType,
+    this.inputFormatters,
     this.width,
     this.enabled = true,
   });
@@ -128,6 +131,7 @@ class CheckoutTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
         cursorColor: AppTheme.colorBlack,
         enabled: enabled,
         decoration: InputDecoration(
