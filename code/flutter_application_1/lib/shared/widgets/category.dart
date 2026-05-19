@@ -280,7 +280,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppTheme.paddingMedium,
+            horizontal: AppTheme.paddingLarge,
             vertical: AppTheme.paddingMediumSmall,
           ),
           child: Row(
@@ -292,6 +292,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: AppTheme.paddingSmall,
+                      horizontal: AppTheme.paddingSmall,
                     ),
                     child: Text(
                       group.title,
@@ -344,7 +345,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
       child: Padding(
         padding: const EdgeInsets.only(
           // Justerat för att linjera snyggt under texten i huvudgruppen (Icon 24px + Spacing 8px)
-          left: AppTheme.paddingLarge + AppTheme.paddingSmall,
+          left: AppTheme.paddingLarge + AppTheme.paddingMedium,
           right: AppTheme.paddingMedium,
           top: AppTheme.paddingSmall,
           bottom: AppTheme.paddingSmall,
