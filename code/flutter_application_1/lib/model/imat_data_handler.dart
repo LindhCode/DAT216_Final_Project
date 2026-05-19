@@ -66,7 +66,6 @@ class ImatDataHandler extends ChangeNotifier {
     _selectProducts.addAll(selection);
     notifyListeners();
   }
-  
 
   // Returnerar alla produkter som hör till category.
   // Med denna och setSelection kan man sätta urvalet till en viss kategori.
@@ -102,25 +101,28 @@ class ImatDataHandler extends ChangeNotifier {
   // Manage favorites
   //
   String _selectedCategory = "";
+  bool _selectedCategoryIsGroup = false;
   bool _isShowingFavorites = false;
 
-// Getters för att läsa värdena
+  // Getters för att läsa värdena
   String get selectedCategory => _selectedCategory;
+  bool get selectedCategoryIsGroup => _selectedCategoryIsGroup;
   bool get isShowingFavorites => _isShowingFavorites;
 
-// Metod för att ändra kategori
-void setSelectedCategory(String category) {
-  _selectedCategory = category;
-  _isShowingFavorites = false; // Om vi väljer en kategori slutar vi visa favoriter
-  notifyListeners();
-}
+  // Metod för att ändra kategori
+  void setSelectedCategory(String category, {bool isGroup = false}) {
+    _selectedCategory = category;
+    _selectedCategoryIsGroup = isGroup;
+    notifyListeners();
+  }
 
-// Metod för att växla favoritvy
-void setShowingFavorites(bool value) {
-  _isShowingFavorites = value;
-  if (value) _selectedCategory = ""; // Om vi visar favoriter nollställer vi kategori
-  notifyListeners();
-}
+  // Metod för att växla favoritvy
+  void setShowingFavorites(bool value) {
+    _isShowingFavorites = value;
+    if (value)
+      _selectedCategory = ""; // Om vi visar favoriter nollställer vi kategori
+    notifyListeners();
+  }
 
   // Returnerar en lista med alla favoritmarkerade produkter.
   List<Product> get favorites => _favorites.values.toList();
@@ -339,7 +341,7 @@ void setShowingFavorites(bool value) {
     notifyListeners();
   }
 
-void placeOrder() async {
+  void placeOrder() async {
     try {
       // 1. SYNKRONISERA: Skicka din lokala korg till servern först!
       // Utan detta tror servern att korgen är tom när placeOrder körs.
@@ -350,7 +352,7 @@ void placeOrder() async {
 
       // 3. RENSA LOKALT: Töm listan med items inuti korg-objektet.
       _shoppingCart.items.clear();
-      
+
       // 4. RENSA SERVER: Berätta för servern att korgen nu är tom.
       await InternetHandler.setShoppingCart(_shoppingCart);
 
@@ -360,7 +362,7 @@ void placeOrder() async {
 
       _orders.clear();
       _orders.addAll(jsonData.map((item) => Order.fromJson(item)).toList());
-      
+
       // 6. MEDDELA UI: Nu ritas historiken om och korgen blir tom i vyn.
       notifyListeners();
     } catch (e) {

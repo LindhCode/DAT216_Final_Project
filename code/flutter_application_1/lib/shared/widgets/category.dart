@@ -168,6 +168,23 @@ class _CategorySidebarState extends State<CategorySidebar> {
     });
   }
 
+  void _onPickGroup(String groupTitle) {
+    setState(() {
+      _expandedGroupTitle = groupTitle;
+    });
+
+    final iMat = widget.iMat;
+    final categories = getGroupCategories(groupTitle);
+    if (categories == null) return;
+
+    final products =
+        categories.expand((cat) => iMat.findProductsByCategory(cat)).toList();
+
+    iMat.setShowingFavorites(false);
+    iMat.setSelectedCategory(groupTitle, isGroup: true);
+    iMat.selectSelection(products);
+  }
+
   void _onPickCategory(ProductCategory cat) {
     final iMat = widget.iMat;
     final label = _categoryLabelSv(cat);
@@ -261,38 +278,51 @@ class _CategorySidebarState extends State<CategorySidebar> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        InkWell(
-          onTap: () => _toggleGroup(group.title),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppTheme.paddingMedium,
-              vertical: AppTheme.paddingMediumSmall,
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  expanded
-                      ? Icons.keyboard_arrow_down
-                      : Icons.keyboard_arrow_right,
-                  color: AppTheme.textMain,
-                  size: AppTheme.paddingLarge,
-                ),
-                const SizedBox(width: AppTheme.paddingSmall),
-                Expanded(
-                  child: Text(
-                    group.title,
-                    style: TextStyle(
-                      fontSize: AppTheme.fontSizeSubtitle,
-                      fontWeight:
-                          expanded || anyChildSelected
-                              ? FontWeight.bold
-                              : FontWeight.w500,
-                      color: AppTheme.textMain,
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTheme.paddingMedium,
+            vertical: AppTheme.paddingMediumSmall,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () => _onPickGroup(group.title),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppTheme.paddingSmall,
+                    ),
+                    child: Text(
+                      group.title,
+                      style: TextStyle(
+                        fontSize: AppTheme.fontSizeSubtitle,
+                        fontWeight:
+                            expanded || anyChildSelected
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                        color: AppTheme.textMain,
+                      ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: AppTheme.paddingSmall),
+              InkWell(
+                onTap: () => _toggleGroup(group.title),
+                borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                child: Padding(
+                  padding: const EdgeInsets.all(AppTheme.paddingSmall),
+                  child: Icon(
+                    expanded
+                        ? Icons.keyboard_arrow_down
+                        : Icons.keyboard_arrow_right,
+                    color: AppTheme.textMain,
+                    size: AppTheme.paddingLarge,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         if (expanded)

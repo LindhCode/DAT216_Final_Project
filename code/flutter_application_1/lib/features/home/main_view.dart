@@ -92,15 +92,18 @@ class _MainViewState extends State<MainView> {
                       horizontal: AppTheme.paddingLarge * 2,
                       vertical: AppTheme.paddingLarge,
                     ),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: AppTheme.gridAspectRatioHome,
-                      crossAxisSpacing: AppTheme.paddingInset,
-                      mainAxisSpacing: AppTheme.paddingInset,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: AppTheme.gridAspectRatioHome,
+                          crossAxisSpacing: AppTheme.paddingInset,
+                          mainAxisSpacing: AppTheme.paddingInset,
+                        ),
                     cacheExtent: 400,
                     itemCount: products.length,
-                    itemBuilder: (context, index) => ProductCard(product: products[index]),
+                    itemBuilder:
+                        (context, index) =>
+                            ProductCard(product: products[index]),
                   ),
                 ),
               ],
@@ -203,7 +206,8 @@ class _MainViewState extends State<MainView> {
     final group = getGroupForCategory(selectedCategory);
     final category = getCategoryByLabel(selectedCategory);
 
-    if (group == null) {
+    final isGroupSelected = iMat.selectedCategoryIsGroup;
+    if (group == null || isGroupSelected) {
       return Text(
         selectedCategory,
         style: const TextStyle(
@@ -222,12 +226,13 @@ class _MainViewState extends State<MainView> {
             onTap: () {
               final categories = getGroupCategories(group);
               if (categories == null) return;
-              final products = categories
-                  .expand((cat) => iMat.findProductsByCategory(cat))
-                  .toList();
+              final products =
+                  categories
+                      .expand((cat) => iMat.findProductsByCategory(cat))
+                      .toList();
               iMat.setShowingFavorites(false);
               iMat.selectSelection(products);
-              iMat.setSelectedCategory(group);
+              iMat.setSelectedCategory(group, isGroup: true);
             },
             child: Text(
               group,
