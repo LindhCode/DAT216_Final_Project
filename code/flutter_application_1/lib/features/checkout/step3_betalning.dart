@@ -47,7 +47,9 @@ class Step3Betalning extends StatelessWidget {
                 cvcCtrl.text.length == 3);
 
         return ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppTheme.contentWidthPayment),
+          constraints: const BoxConstraints(
+            maxWidth: AppTheme.contentWidthPayment,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -165,8 +167,7 @@ class _PaymentOption extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(AppTheme.paddingMedium),
         decoration: BoxDecoration(
-          color:
-              selected ? AppTheme.primaryGreen05 : AppTheme.cardBackground,
+          color: selected ? AppTheme.primaryGreen05 : AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
           border: Border.all(
             color: selected ? CheckoutTheme.green : CheckoutTheme.border,
@@ -175,6 +176,11 @@ class _PaymentOption extends StatelessWidget {
         ),
         child: Row(
           children: [
+            Icon(
+              selected ? Icons.radio_button_checked : Icons.radio_button_off,
+              color: selected ? AppTheme.colorBlack : CheckoutTheme.textMuted,
+            ),
+            const SizedBox(width: AppTheme.paddingMedium),
             logo,
             const SizedBox(width: AppTheme.paddingMedium),
             Expanded(
@@ -183,13 +189,9 @@ class _PaymentOption extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: selected ? FontWeight.bold : FontWeight.normal,
                   color:
-                      selected ? CheckoutTheme.green : CheckoutTheme.textDark,
+                      selected ? AppTheme.colorBlack : CheckoutTheme.textDark,
                 ),
               ),
-            ),
-            Icon(
-              selected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: selected ? CheckoutTheme.green : CheckoutTheme.textMuted,
             ),
           ],
         ),
@@ -350,31 +352,26 @@ class ExpiryDateInputFormatter extends TextInputFormatter {
 class _KlarnaLogo extends StatelessWidget {
   const _KlarnaLogo();
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(
-      horizontal: AppTheme.paddingSmall,
-      vertical: AppTheme.paddingTiny,
-    ),
-    decoration: BoxDecoration(
-      color: AppTheme.klarnaPink,
-      borderRadius: BorderRadius.circular(AppTheme.radiusTight),
-    ),
-    child: const Text(
-      'Klarna.',
-      style: TextStyle(
-        fontWeight: FontWeight.w900,
-        fontSize: AppTheme.fontSizeCaption,
-        color: AppTheme.colorBlack,
-      ),
-    ),
+  Widget build(BuildContext context) => SizedBox(
+    width: AppTheme.iconSizeLarge * 2.5,
+    height: AppTheme.iconSizeLarge,
+    child: Image.asset('assets/images/klarna-logo.png', fit: BoxFit.contain),
   );
 }
 
 class _BankLogo extends StatelessWidget {
   const _BankLogo();
   @override
-  Widget build(BuildContext context) =>
-      const Icon(Icons.credit_card, color: CheckoutTheme.textDark);
+  Widget build(BuildContext context) => Container(
+    width: AppTheme.iconSizeLarge,
+    height: AppTheme.iconSizeLarge,
+    clipBehavior: Clip.antiAlias,
+    decoration: const BoxDecoration(shape: BoxShape.circle),
+    child: Image.asset(
+      'assets/images/mastercard-logo.png',
+      fit: BoxFit.contain,
+    ),
+  );
 }
 
 class _SwishLogo extends StatelessWidget {
@@ -383,16 +380,8 @@ class _SwishLogo extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     width: AppTheme.iconSizeLarge,
     height: AppTheme.iconSizeLarge,
-    decoration: const BoxDecoration(
-      color: AppTheme.swishBlue,
-      shape: BoxShape.circle,
-    ),
-    child: const Center(
-      child: Icon(
-        Icons.phone_iphone,
-        size: AppTheme.iconSizeSmall,
-        color: AppTheme.colorWhite,
-      ),
-    ),
+    decoration: const BoxDecoration(shape: BoxShape.circle),
+    clipBehavior: Clip.antiAlias,
+    child: Image.asset('assets/images/swish-logo.webp', fit: BoxFit.cover),
   );
 }
