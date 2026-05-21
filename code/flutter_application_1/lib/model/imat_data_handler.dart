@@ -595,6 +595,9 @@ import 'package:http/http.dart' as http;
     singleJson = jsonDecode(response);
     _shoppingCart = ShoppingCart.fromJson(singleJson);
 
+    // Notify listeners after cart is loaded so UI updates immediately
+    notifyListeners();
+
     response = await InternetHandler.getExtras();
     _extras = jsonDecode(response);
 
