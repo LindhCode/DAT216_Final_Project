@@ -113,6 +113,7 @@ class CheckoutTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final double? width;
   final bool enabled;
+  final Color? textColor;
 
   const CheckoutTextField({
     super.key,
@@ -122,6 +123,7 @@ class CheckoutTextField extends StatelessWidget {
     this.inputFormatters,
     this.width,
     this.enabled = true,
+    this.textColor,
   });
 
   @override
@@ -129,6 +131,7 @@ class CheckoutTextField extends StatelessWidget {
     return SizedBox(
       width: width ?? double.infinity,
       child: TextField(
+        style: TextStyle(color: textColor ?? AppTheme.colorBlack),
         controller: controller,
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,

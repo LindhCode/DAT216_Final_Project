@@ -12,13 +12,13 @@ class AccountView extends StatefulWidget {
 }
 
 class _AccountViewState extends State<AccountView> {
-  bool isEditing = false;
+  bool isEditingPersonal = false;
+  bool isEditingDelivery = false;
 
   late TextEditingController firstName;
   late TextEditingController lastName;
   late TextEditingController email;
   late TextEditingController phone;
-  late TextEditingController mobile;
   late TextEditingController address;
   late TextEditingController postCode;
   late TextEditingController city;
@@ -45,13 +45,12 @@ class _AccountViewState extends State<AccountView> {
               ? customer.phoneNumber
               : '078-233 78 44',
     );
-    mobile = TextEditingController(text: customer.mobilePhoneNumber);
     address = TextEditingController(text: customer.address);
     postCode = TextEditingController(text: customer.postCode);
     city = TextEditingController(text: customer.postAddress);
   }
 
-  void save() {
+  void savePersonal() {
     final iMat = context.read<ImatDataHandler>();
     final customer = iMat.getCustomer();
 
@@ -59,28 +58,45 @@ class _AccountViewState extends State<AccountView> {
     customer.lastName = lastName.text;
     customer.email = email.text;
     customer.phoneNumber = phone.text;
-    customer.mobilePhoneNumber = mobile.text;
-    customer.address = address.text;
-    customer.postCode = postCode.text;
-    customer.postAddress = city.text;
 
     iMat.setCustomer(customer);
 
-    setState(() => isEditing = false);
+    setState(() => isEditingPersonal = false);
 
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text("Uppgifter sparade")));
   }
 
-  Widget field(String label, TextEditingController controller) {
+  void saveDelivery() {
+    final iMat = context.read<ImatDataHandler>();
+    final customer = iMat.getCustomer();
+
+    customer.address = address.text;
+    customer.postCode = postCode.text;
+    customer.postAddress = city.text;
+
+    iMat.setCustomer(customer);
+
+    setState(() => isEditingDelivery = false);
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Uppgifter sparade")));
+  }
+
+  Widget field(String label, TextEditingController controller, bool isEditing) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppTheme.paddingSmall),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FieldLabel(label),
-          CheckoutTextField(controller: controller, enabled: isEditing),
+          CheckoutTextField(
+            controller: controller,
+            enabled: isEditing,
+            textColor: isEditing ? AppTheme.colorBlack : AppTheme.grey600,
+          ),
         ],
       ),
     );
@@ -134,37 +150,90 @@ class _AccountViewState extends State<AccountView> {
                         ),
                       ),
                       const SizedBox(height: AppTheme.paddingInset),
-                      field("Förnamn", firstName),
-                      field("Efternamn", lastName),
-                      field("Email", email),
-                      field("Telefon", phone),
-                      field("Mobil", mobile),
+                      field("Förnamn", firstName, isEditingPersonal),
+                      field("Efternamn", lastName, isEditingPersonal),
+                      field("Email", email, isEditingPersonal),
+                      field("Telefon", phone, isEditingPersonal),
                       const SizedBox(height: AppTheme.paddingInset),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.primaryGreen,
-                            foregroundColor: AppTheme.colorWhite,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppTheme.paddingLarge,
-                              vertical: AppTheme.paddingSmall,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusFull,
+                        child: isEditingPersonal
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  NavButton(
+                                    label: 'Avbryt',
+                                    onPressed: () {
+                                      final iMat =
+                                          context.read<ImatDataHandler>();
+                                      final customer = iMat.getCustomer();
+
+                                      firstName.text = customer.firstName;
+                                      lastName.text = customer.lastName;
+                                      email.text = customer.email;
+                                      phone.text = customer.phoneNumber;
+
+                                      setState(() => isEditingPersonal = false);
+                                    },
+                                    outlined: true,
+                                  ),
+                                  const SizedBox(width: AppTheme.paddingMedium),
+                                  ElevatedButton(
+                                    onPressed: savePersonal,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppTheme.primaryGreen,
+                                      foregroundColor: AppTheme.colorWhite,
+                                      disabledBackgroundColor:
+                                          AppTheme.buttonDisabledBackground,
+                                      disabledForegroundColor:
+                                          AppTheme.buttonDisabledForeground,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: AppTheme.paddingLarge,
+                                        vertical: AppTheme.paddingMedium,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            AppTheme.radiusFull),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Spara',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: AppTheme.fontSizeBodyLarge,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : ElevatedButton(
+                                onPressed: () {
+                                  setState(() => isEditingPersonal = true);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppTheme.primaryGreen,
+                                  foregroundColor: AppTheme.colorWhite,
+                                  disabledBackgroundColor:
+                                      AppTheme.buttonDisabledBackground,
+                                  disabledForegroundColor:
+                                      AppTheme.buttonDisabledForeground,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppTheme.paddingLarge,
+                                    vertical: AppTheme.paddingMedium,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusFull),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Redigera',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: AppTheme.fontSizeBodyLarge,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (isEditing) {
-                              save();
-                            } else {
-                              setState(() => isEditing = true);
-                            }
-                          },
-                          child: Text(isEditing ? "Spara" : "Redigera"),
-                        ),
                       ),
                     ],
                   ),
@@ -194,46 +263,99 @@ class _AccountViewState extends State<AccountView> {
                         ),
                       ),
                       const SizedBox(height: AppTheme.paddingInset),
-                      field("Gatuadress", address),
+                      field("Gatuadress", address, isEditingDelivery),
                       Row(
                         children: [
                           Expanded(
                             flex: 2,
-                            child: field("Postnummer", postCode),
+                            child: field("Postnummer", postCode, isEditingDelivery),
                           ),
                           const SizedBox(width: AppTheme.paddingMedium),
                           Expanded(
                             flex: 3,
-                            child: field("Ort", city),
+                            child: field("Ort", city, isEditingDelivery),
                           ),
                         ],
                       ),
                       const SizedBox(height: AppTheme.paddingInset),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.primaryGreen,
-                            foregroundColor: AppTheme.colorWhite,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppTheme.paddingLarge,
-                              vertical: AppTheme.paddingSmall,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusFull,
+                        child: isEditingDelivery
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  NavButton(
+                                    label: 'Avbryt',
+                                    onPressed: () {
+                                      final iMat =
+                                          context.read<ImatDataHandler>();
+                                      final customer = iMat.getCustomer();
+
+                                      address.text = customer.address;
+                                      postCode.text = customer.postCode;
+                                      city.text = customer.postAddress;
+
+                                      setState(() => isEditingDelivery = false);
+                                    },
+                                    outlined: true,
+                                  ),
+                                  const SizedBox(width: AppTheme.paddingMedium),
+                                  ElevatedButton(
+                                    onPressed: saveDelivery,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppTheme.primaryGreen,
+                                      foregroundColor: AppTheme.colorWhite,
+                                      disabledBackgroundColor:
+                                          AppTheme.buttonDisabledBackground,
+                                      disabledForegroundColor:
+                                          AppTheme.buttonDisabledForeground,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: AppTheme.paddingLarge,
+                                        vertical: AppTheme.paddingMedium,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            AppTheme.radiusFull),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Spara',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: AppTheme.fontSizeBodyLarge,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : ElevatedButton(
+                                onPressed: () {
+                                  setState(() => isEditingDelivery = true);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppTheme.primaryGreen,
+                                  foregroundColor: AppTheme.colorWhite,
+                                  disabledBackgroundColor:
+                                      AppTheme.buttonDisabledBackground,
+                                  disabledForegroundColor:
+                                      AppTheme.buttonDisabledForeground,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppTheme.paddingLarge,
+                                    vertical: AppTheme.paddingMedium,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusFull),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Redigera',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: AppTheme.fontSizeBodyLarge,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (isEditing) {
-                              save();
-                            } else {
-                              setState(() => isEditing = true);
-                            }
-                          },
-                          child: Text(isEditing ? "Spara" : "Redigera"),
-                        ),
                       ),
                     ],
                   ),
