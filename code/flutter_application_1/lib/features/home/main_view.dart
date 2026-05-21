@@ -79,12 +79,8 @@ class _MainViewState extends State<MainView> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Dina favoriter',
-                      style: const TextStyle(
-                        fontSize: AppTheme.fontSizeHeadingSmall,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textMain,
-                      ),
+                      'Mina favoriter',
+                      style: AppTheme.pageHeadline,
                     ),
                   ),
                 ),

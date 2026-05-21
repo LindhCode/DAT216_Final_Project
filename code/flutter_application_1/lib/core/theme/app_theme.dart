@@ -45,6 +45,13 @@ class AppTheme {
   static const double fontSizeHeadingLarge = 28.0;
   static const double fontSizeDisplaySmall = 30.0;
   static const double fontSizeDisplay = 36.0;
+
+  static const TextStyle pageHeadline = TextStyle(
+    fontSize: fontSizeDisplay,
+    fontWeight: FontWeight.bold,
+    color: colorBlack,
+  );
+
   static const double fontSizePriceModal = 24.0;
   static const double fontSizePriceHero = 30.0;
 

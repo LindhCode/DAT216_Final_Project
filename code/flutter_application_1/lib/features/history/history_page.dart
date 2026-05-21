@@ -22,12 +22,8 @@ class HistoryPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Dina tidigare köp',
-                style: TextStyle(
-                  fontSize: AppTheme.fontSizeDisplay,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.colorBlack,
-                ),
+                'Mina Tidigare köp',
+                style: AppTheme.pageHeadline,
               ),
               const SizedBox(height: AppTheme.paddingLarge),
 

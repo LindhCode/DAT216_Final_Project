@@ -206,11 +206,7 @@ class _AccountViewState extends State<AccountView> {
               children: [
                 const Text(
                   'Mitt Konto',
-                  style: TextStyle(
-                    fontSize: AppTheme.fontSizeDisplay,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.colorBlack,
-                  ),
+                  style: AppTheme.pageHeadline,
                 ),
                 const SizedBox(height: AppTheme.paddingLarge),
                 Container(
