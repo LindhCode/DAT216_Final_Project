@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:imat_app/core/theme/app_theme.dart';
 import 'package:imat_app/model/imat_data_handler.dart';
 import 'package:provider/provider.dart';
@@ -48,7 +49,8 @@ class _Step2LeveransState extends State<Step2Leverans> {
   void initState() {
     super.initState();
     selectedDate = widget.selectedDate;
-    selectedDeliveryTime = widget.deliveryTime.isNotEmpty ? widget.deliveryTime : null;
+    selectedDeliveryTime =
+        widget.deliveryTime.isNotEmpty ? widget.deliveryTime : null;
     _prefillCustomerData();
   }
 
@@ -93,7 +95,9 @@ class _Step2LeveransState extends State<Step2Leverans> {
             selectedDate != null;
 
         return ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppTheme.contentWidthCheckout),
+          constraints: const BoxConstraints(
+            maxWidth: AppTheme.contentWidthCheckout,
+          ),
           child: Column(
             children: [
               const Text(
@@ -158,6 +162,11 @@ class _Step2LeveransState extends State<Step2Leverans> {
                               const FieldLabel('Postnummer'),
                               CheckoutTextField(
                                 controller: widget.postCodeCtrl,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(5),
+                                ],
                               ),
                             ],
                           ),
@@ -200,7 +209,8 @@ class _Step2LeveransState extends State<Step2Leverans> {
                                     surface: AppTheme.cardBackground,
                                     onSurface: AppTheme.textMutedStrong,
                                   ),
-                                  dialogBackgroundColor: AppTheme.cardBackground,
+                                  dialogBackgroundColor:
+                                      AppTheme.cardBackground,
                                   textButtonTheme: TextButtonThemeData(
                                     style: ButtonStyle(
                                       foregroundColor: WidgetStateProperty.all(
@@ -289,9 +299,7 @@ class _Step2LeveransState extends State<Step2Leverans> {
                       value: selectedDeliveryTime,
                       hint: const Text(
                         'Välj tid',
-                        style: TextStyle(
-                          fontSize: AppTheme.fontSizeBodyLarge,
-                        ),
+                        style: TextStyle(fontSize: AppTheme.fontSizeBodyLarge),
                       ),
                       style: const TextStyle(
                         fontSize: AppTheme.fontSizeBodyLarge,
@@ -301,25 +309,32 @@ class _Step2LeveransState extends State<Step2Leverans> {
                         filled: true,
                         fillColor: AppTheme.grey50,
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-                          borderSide: const BorderSide(color: CheckoutTheme.border),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusMedium,
+                          ),
+                          borderSide: const BorderSide(
+                            color: CheckoutTheme.border,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusMedium,
+                          ),
                           borderSide: BorderSide(color: AppTheme.primaryGreen),
                         ),
                       ),
-                      items: const [
-                        '12:00 - 14:00',
-                        '14:00 - 16:00',
-                        '16:00 - 18:00',
-                        '18:00 - 20:00',
-                      ].map((time) {
-                        return DropdownMenuItem<String>(
-                          value: time,
-                          child: Text(time),
-                        );
-                      }).toList(),
+                      items:
+                          const [
+                            '12:00 - 14:00',
+                            '14:00 - 16:00',
+                            '16:00 - 18:00',
+                            '18:00 - 20:00',
+                          ].map((time) {
+                            return DropdownMenuItem<String>(
+                              value: time,
+                              child: Text(time),
+                            );
+                          }).toList(),
                       onChanged: (value) {
                         if (value != null) {
                           setState(() {
