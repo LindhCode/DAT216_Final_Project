@@ -70,9 +70,11 @@ class _MainViewState extends State<MainView> {
             : Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppTheme.paddingLarge,
-                    vertical: AppTheme.paddingLarge,
+                  padding: const EdgeInsets.fromLTRB(
+                    AppTheme.paddingLarge * 2,
+                    AppTheme.paddingLarge,
+                    AppTheme.paddingLarge,
+                    AppTheme.paddingLarge,
                   ),
                   child: Align(
                     alignment: Alignment.centerLeft,

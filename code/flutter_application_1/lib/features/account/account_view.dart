@@ -128,7 +128,15 @@ class _AccountViewState extends State<AccountView> {
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text("Uppgifter sparade")));
+    ).showSnackBar(
+      SnackBar(
+        content: const Text(
+          "Uppgifter sparade",
+          style: TextStyle(color: AppTheme.colorWhite),
+        ),
+        backgroundColor: AppTheme.primaryGreen,
+      ),
+    );
   }
 
   void saveDelivery() {
@@ -145,7 +153,15 @@ class _AccountViewState extends State<AccountView> {
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text("Uppgifter sparade")));
+    ).showSnackBar(
+      SnackBar(
+        content: const Text(
+          "Uppgifter sparade",
+          style: TextStyle(color: AppTheme.colorWhite),
+        ),
+        backgroundColor: AppTheme.primaryGreen,
+      ),
+    );
   }
 
   Widget field(
@@ -216,8 +232,9 @@ class _AccountViewState extends State<AccountView> {
                       const Text(
                         "Personuppgifter",
                         style: TextStyle(
-                          fontSize: AppTheme.fontSizeHeading,
+                          fontSize: AppTheme.fontSizeHeadingSmall,
                           fontWeight: FontWeight.bold,
+                          color: AppTheme.textMain,
                         ),
                       ),
                       const SizedBox(height: AppTheme.paddingInset),
@@ -342,8 +359,9 @@ class _AccountViewState extends State<AccountView> {
                       const Text(
                         "Leveransuppgifter",
                         style: TextStyle(
-                          fontSize: AppTheme.fontSizeHeading,
+                          fontSize: AppTheme.fontSizeHeadingSmall,
                           fontWeight: FontWeight.bold,
+                          color: AppTheme.textMain,
                         ),
                       ),
                       const SizedBox(height: AppTheme.paddingInset),

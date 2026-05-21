@@ -22,7 +22,7 @@ class HistoryPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Mina tidigare köp',
+                'Dina tidigare köp',
                 style: TextStyle(
                   fontSize: AppTheme.fontSizeDisplay,
                   fontWeight: FontWeight.bold,
